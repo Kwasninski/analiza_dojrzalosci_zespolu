@@ -55,6 +55,36 @@
     max-width:640px;
   }
 
+  .team-field{
+    margin-top:22px;
+    max-width:360px;
+  }
+  .team-field label{
+    display:block;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .team-field input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    font-family:inherit;
+    font-size:14.5px;
+    background:var(--paper-card);
+    color:var(--ink);
+  }
+  .team-field input:focus-visible{outline:2px solid var(--org);outline-offset:1px;}
+  .team-hint{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:6px 0 0;
+  }
+
   .note{
     margin-top:22px;
     padding:18px 20px;
@@ -400,6 +430,11 @@
   <div class="eyebrow">Narzędzie samoobsługowe · bez moderatora</div>
   <h1>Kompas dojrzałości zespołu</h1>
   <p class="lede">Wspólna ocena tego, jak dojrzale i sprawnie zespół planuje, organizuje pracę oraz jak wygląda jego droga od kodu do produkcji. Bez odniesienia do konkretnego frameworka — chodzi o to, co faktycznie działa.</p>
+
+  <div class="team-field">
+    <label for="teamName">Nazwa zespołu</label>
+    <input type="text" id="teamName" placeholder="np. Payments Squad">
+  </div>
 
   <div class="note">
     <strong>Zanim zaczniecie:</strong> to narzędzie zostaje z Wami na dłużej. Nie potrzebujecie mnie, żeby z niego korzystać — usiądźcie razem, przejdźcie przez pytania, podyskutujcie tam, gdzie oceny się różnią, i wybierzcie 1–2 rzeczy do poprawy na najbliższy kwartał. Wracajcie do kompasu regularnie i patrzcie, jak przesuwa się mapa.
@@ -932,6 +967,7 @@ function flushPendingAction(){
 
 document.getElementById('printBtn').addEventListener('click', () => {
   flushPendingAction();
+  const team = currentTeamName();
   const orgAvg = document.getElementById('orgAvgOut').textContent;
   const techAvg = document.getElementById('techAvgOut').textContent;
   const strongest = document.getElementById('strongestOut').textContent;
@@ -966,7 +1002,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
     @media print{.hint{display:none;}}
   </style></head><body>
   <h1>Kompas dojrzałości zespołu</h1>
-  <div class="meta">Wynik zapisany: ${new Date().toLocaleDateString('pl-PL', {year:'numeric', month:'long', day:'numeric'})}</div>
+  <div class="meta">${team ? 'Zespół: ' + team + ' · ' : ''}Wynik zapisany: ${new Date().toLocaleDateString('pl-PL', {year:'numeric', month:'long', day:'numeric'})}</div>
   <div class="hint">Wskazówka: Ctrl+P (lub Cmd+P), żeby zapisać tę stronę jako PDF.</div>
   <div class="row">
     <div><div class="label">Organizacja i planowanie — śr. ${orgAvg}</div>${orgRadarSVG}</div>
@@ -983,7 +1019,8 @@ document.getElementById('printBtn').addEventListener('click', () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `kompas-wynik-${new Date().toISOString().slice(0,10)}.html`;
+  const teamSlug = team ? '-' + team.toLowerCase().replace(/[^a-z0-9ąćęłńóśźż]+/gi, '-').replace(/^-+|-+$/g, '') : '';
+  a.download = `kompas-wynik${teamSlug}-${new Date().toISOString().slice(0,10)}.html`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -992,9 +1029,19 @@ document.getElementById('printBtn').addEventListener('click', () => {
   document.getElementById('saveStatus').textContent = 'Pobrano plik z wynikiem. Otwórz go i użyj Ctrl+P, żeby zapisać jako PDF.';
 });
 
+function currentTeamName(){
+  return document.getElementById('teamName').value.trim();
+}
+
 document.getElementById('saveBtn').addEventListener('click', async () => {
   flushPendingAction();
   const statusEl = document.getElementById('saveStatus');
+  const team = currentTeamName();
+  if(!team){
+    statusEl.textContent = 'Wpiszcie nazwę zespołu na górze strony, zanim zapiszecie wynik — to ona oddziela Waszą historię od innych zespołów.';
+    document.getElementById('teamName').focus();
+    return;
+  }
   statusEl.textContent = 'Zapisywanie…';
   try{
     const now = new Date();
@@ -1003,6 +1050,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     const techVals = TECH_DIMS.filter(d => !naSet.has(d.id)).map(d => state[d.id]);
     const payload = {
       date: now.toISOString(),
+      team: team,
       orgAvg: orgVals.length ? orgVals.reduce((a,b)=>a+b,0)/orgVals.length : null,
       techAvg: techVals.length ? techVals.reduce((a,b)=>a+b,0)/techVals.length : null,
       scores: {...state},
@@ -1012,7 +1060,7 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     };
     const result = await window.storage.set(key, JSON.stringify(payload), true);
     if(result){
-      statusEl.textContent = 'Zapisano. Ta ocena jest widoczna dla całego zespołu w historii poniżej.';
+      statusEl.textContent = 'Zapisano. Ta ocena jest widoczna w historii poniżej dla zespołu „' + team + '”.';
       loadHistory();
     } else {
       statusEl.textContent = 'Nie udało się zapisać. Spróbujcie ponownie.';
@@ -1023,13 +1071,17 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   }
 });
 
+let allHistoryEntries = [];
+
 async function loadHistory(){
   const el = document.getElementById('historyBody');
+  el.innerHTML = 'Ładowanie historii…';
   try{
     const listResult = await window.storage.list('maturity-assessment:', true);
     const keys = (listResult && listResult.keys) ? listResult.keys : [];
     if(keys.length === 0){
-      el.innerHTML = 'Brak zapisanych ocen. Bądźcie pierwsi.';
+      allHistoryEntries = [];
+      renderHistory();
       return;
     }
     const entries = await Promise.all(keys.map(async k => {
@@ -1038,23 +1090,51 @@ async function loadHistory(){
         return r ? JSON.parse(r.value) : null;
       } catch(e){ return null; }
     }));
-    const valid = entries.filter(Boolean).sort((a,b) => new Date(b.date) - new Date(a.date));
-    if(valid.length === 0){
-      el.innerHTML = 'Brak zapisanych ocen. Bądźcie pierwsi.';
-      return;
-    }
-    const rows = valid.map(v => {
-      const d = new Date(v.date);
-      const dateStr = d.toLocaleDateString('pl-PL', {year:'numeric', month:'short', day:'numeric'});
-      const actionCount = (v.actions && v.actions.length) ? v.actions.length : 0;
-      return `<tr><td>${dateStr}</td><td>${v.orgAvg === null || v.orgAvg === undefined ? '–' : v.orgAvg.toFixed(1)}</td><td>${v.techAvg === null || v.techAvg === undefined ? '–' : v.techAvg.toFixed(1)}</td><td>${actionCount}</td></tr>`;
-    }).join('');
-    el.innerHTML = `<table><thead><tr><th>Data</th><th>Organizacja</th><th>Technologia</th><th>Działania</th></tr></thead><tbody>${rows}</tbody></table>`;
+    allHistoryEntries = entries.filter(Boolean).sort((a,b) => new Date(b.date) - new Date(a.date));
+    renderHistory();
   } catch(err){
     el.innerHTML = 'Historia niedostępna w tej chwili.';
     console.error(err);
   }
 }
+
+function renderHistory(){
+  const el = document.getElementById('historyBody');
+  const team = currentTeamName();
+  if(!team){
+    el.innerHTML = 'Wpiszcie nazwę zespołu na górze strony, żeby zobaczyć historię Waszych ocen.';
+    return;
+  }
+  const teamLower = team.toLowerCase();
+  const mine = allHistoryEntries.filter(v => (v.team || '').trim().toLowerCase() === teamLower);
+  if(mine.length === 0){
+    el.innerHTML = `Brak zapisanych ocen dla zespołu „${team}”. Bądźcie pierwsi.`;
+    return;
+  }
+  const rows = mine.map(v => {
+    const d = new Date(v.date);
+    const dateStr = d.toLocaleDateString('pl-PL', {year:'numeric', month:'short', day:'numeric'});
+    const actionCount = (v.actions && v.actions.length) ? v.actions.length : 0;
+    return `<tr><td>${dateStr}</td><td>${v.orgAvg === null || v.orgAvg === undefined ? '–' : v.orgAvg.toFixed(1)}</td><td>${v.techAvg === null || v.techAvg === undefined ? '–' : v.techAvg.toFixed(1)}</td><td>${actionCount}</td></tr>`;
+  }).join('');
+  el.innerHTML = `<table><thead><tr><th>Data</th><th>Organizacja</th><th>Technologia</th><th>Działania</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+document.getElementById('teamName').addEventListener('input', () => {
+  renderHistory();
+  try{ window.storage.set('last-team-name', document.getElementById('teamName').value, false); }catch(e){}
+});
+
+(async () => {
+  try{
+    const last = await window.storage.get('last-team-name', false);
+    if(last && last.value){
+      document.getElementById('teamName').value = last.value;
+    }
+  } catch(e){ /* no saved name yet, fine */ }
+  renderHistory();
+})();
+
 loadHistory();
 </script>
 </body>
