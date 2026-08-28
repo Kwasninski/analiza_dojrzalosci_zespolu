@@ -86,6 +86,42 @@
     color:var(--ink-soft);
   }
   details.howto li{margin-bottom:6px;}
+  .howto-note{
+    margin:12px 0 4px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:rgba(23,34,46,0.05);
+    border-radius:5px;
+    padding:10px 12px;
+  }
+  .howto-note strong{color:var(--ink);}
+
+  .na-toggle{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:10px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .na-toggle input{cursor:pointer;}
+  .card.is-na{opacity:0.55;}
+  .card.is-na input[type=range]{cursor:not-allowed;}
+  .na-badge{
+    display:inline-block;
+    font-size:10.5px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:1px 6px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
 
   .radars{
     display:flex;
@@ -373,9 +409,10 @@
     <summary>Jak korzystać z tego narzędzia (3 kroki)</summary>
     <ol>
       <li>Usiądźcie razem jako zespół — najlepiej w pełnym składzie, razem z PO/PM.</li>
-      <li>Dla każdego wymiaru przeczytajcie opisy poziomów 1–5 i wspólnie wybierzcie ocenę, którą wszyscy akceptują. Dyskusja i różnice zdań są tu ważniejsze niż sama liczba.</li>
+      <li>Dla każdego wymiaru przeczytajcie opisy poziomów 1–5 i wspólnie wybierzcie ocenę, którą wszyscy akceptują. Dyskusja i różnice zdań są tu ważniejsze niż sama liczba. Jeśli pytanie po prostu nie pasuje do Waszego kontekstu (np. specyfika technologii czy regulacji), zaznaczcie „nie dotyczy” zamiast zgadywać ocenę.</li>
       <li>Na dole zobaczycie dopasowane do wyników propozycje kolejnych kroków oraz miejsce na własne działania (z osobą odpowiedzialną i terminem) — zapiszcie wynik zespołu, żeby móc wrócić do niego za kwartał i porównać, co się zmieniło.</li>
     </ol>
+    <p class="howto-note"><strong>Jeśli się nie zgadzacie:</strong> nie uśredniajcie w milczeniu tylko po to, żeby ruszyć dalej. Przedyskutujcie, skąd bierze się różnica zdań — często to najbardziej wartościowa część ćwiczenia. Jeśli mimo dyskusji nadal się nie zgadzacie, wybierzcie niższą z ocen jako bardziej ostrożną i zanotujcie rozbieżność w notatkach na dole — to samo w sobie jest przydatną informacją.</p>
   </details>
 
   <div class="radars">
@@ -693,12 +730,13 @@ const RECOMMENDATIONS = {
 };
 
 const state = {};
+const naSet = new Set();
 [...ORG_DIMS, ...TECH_DIMS].forEach(d => state[d.id] = 3);
 
 function renderCards(dims, containerId, colorClass){
   const el = document.getElementById(containerId);
   el.innerHTML = dims.map(d => `
-    <div class="card">
+    <div class="card" id="card-${d.id}">
       <div class="title-row">
         <div class="title">${d.title}</div>
         ${d.help ? `<span class="info-icon" tabindex="0">i<span class="tooltip">${d.help}</span></span>` : ''}
@@ -707,6 +745,10 @@ function renderCards(dims, containerId, colorClass){
       <input type="range" min="1" max="5" step="1" value="3" id="range-${d.id}" data-id="${d.id}">
       <div class="scale-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
       <div class="scale-ends"><span>Niska dojrzałość</span><span>Wysoka dojrzałość</span></div>
+      <label class="na-toggle">
+        <input type="checkbox" id="na-${d.id}">
+        Nie dotyczy naszego zespołu — pomiń przy liczeniu wyniku
+      </label>
     </div>
   `).join('');
 
@@ -718,6 +760,21 @@ function renderCards(dims, containerId, colorClass){
       document.getElementById(`lvl-${d.id}`).textContent = d.levels[v-1];
       update();
     });
+
+    const naCheckbox = document.getElementById(`na-${d.id}`);
+    naCheckbox.addEventListener('change', (e) => {
+      const card = document.getElementById(`card-${d.id}`);
+      if(e.target.checked){
+        naSet.add(d.id);
+        input.disabled = true;
+        card.classList.add('is-na');
+      } else {
+        naSet.delete(d.id);
+        input.disabled = false;
+        card.classList.remove('is-na');
+      }
+      update();
+    });
   });
 }
 
@@ -726,7 +783,7 @@ function polygonPoints(dims, size, values){
   const n = dims.length;
   return dims.map((d,i) => {
     const angle = (Math.PI*2 * i / n) - Math.PI/2;
-    const val = values[d.id];
+    const val = naSet.has(d.id) ? 0 : values[d.id];
     const rad = r * (val/5);
     const x = cx + rad * Math.cos(angle);
     const y = cy + rad * Math.sin(angle);
@@ -765,20 +822,28 @@ function renderRadar(dims, values, color, size=280){
 }
 
 function update(){
-  const orgVals = ORG_DIMS.map(d => state[d.id]);
-  const techVals = TECH_DIMS.map(d => state[d.id]);
-  const orgAvg = orgVals.reduce((a,b)=>a+b,0)/orgVals.length;
-  const techAvg = techVals.reduce((a,b)=>a+b,0)/techVals.length;
+  const orgActive = ORG_DIMS.filter(d => !naSet.has(d.id));
+  const techActive = TECH_DIMS.filter(d => !naSet.has(d.id));
+  const orgVals = orgActive.map(d => state[d.id]);
+  const techVals = techActive.map(d => state[d.id]);
+  const orgAvg = orgVals.length ? orgVals.reduce((a,b)=>a+b,0)/orgVals.length : null;
+  const techAvg = techVals.length ? techVals.reduce((a,b)=>a+b,0)/techVals.length : null;
 
-  document.getElementById('orgAvgLabel').textContent = orgAvg.toFixed(1);
-  document.getElementById('techAvgLabel').textContent = techAvg.toFixed(1);
-  document.getElementById('orgAvgOut').textContent = orgAvg.toFixed(1) + ' / 5';
-  document.getElementById('techAvgOut').textContent = techAvg.toFixed(1) + ' / 5';
+  document.getElementById('orgAvgLabel').textContent = orgAvg === null ? '–' : orgAvg.toFixed(1);
+  document.getElementById('techAvgLabel').textContent = techAvg === null ? '–' : techAvg.toFixed(1);
+  document.getElementById('orgAvgOut').textContent = orgAvg === null ? 'brak ocenionych wymiarów' : orgAvg.toFixed(1) + ' / 5';
+  document.getElementById('techAvgOut').textContent = techAvg === null ? 'brak ocenionych wymiarów' : techAvg.toFixed(1) + ' / 5';
 
   document.getElementById('orgRadar').innerHTML = renderRadar(ORG_DIMS, state, 'var(--org)'.startsWith('var') ? '#B9812E' : '#B9812E');
   document.getElementById('techRadar').innerHTML = renderRadar(TECH_DIMS, state, '#276765');
 
-  const all = [...ORG_DIMS, ...TECH_DIMS];
+  const all = [...orgActive, ...techActive];
+  if(all.length === 0){
+    document.getElementById('strongestOut').textContent = '–';
+    document.getElementById('weakestOut').textContent = '–';
+    renderRecommendations([]);
+    return;
+  }
   let strongest = all[0], weakest = all[0];
   all.forEach(d => {
     if(state[d.id] > state[strongest.id]) strongest = d;
@@ -792,10 +857,14 @@ function update(){
 
 function renderRecommendations(all){
   const el = document.getElementById('recoOut');
+  if(all.length === 0){
+    el.innerHTML = '<div class="reco-empty">Wszystkie wymiary są oznaczone jako „nie dotyczy” — odznaczcie przynajmniej część z nich, żeby zobaczyć rekomendacje.</div>';
+    return;
+  }
   const sorted = [...all].sort((a,b) => state[a.id] - state[b.id]);
   let candidates = sorted.filter(d => state[d.id] <= 3).slice(0, 4);
   if(candidates.length === 0){
-    el.innerHTML = '<div class="reco-empty">Wszystkie wymiary oceniacie na 4+ — solidny wynik. Wybierzcie jeden, w którym chcecie pójść jeszcze dalej, i potraktujcie go jako cel rozwojowy na najbliższy kwartał.</div>';
+    el.innerHTML = '<div class="reco-empty">Wszystkie ocenione wymiary są na 4+ — solidny wynik. Wybierzcie jeden, w którym chcecie pójść jeszcze dalej, i potraktujcie go jako cel rozwojowy na najbliższy kwartał.</div>';
     return;
   }
   el.innerHTML = candidates.map(d => {
@@ -930,13 +999,14 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
   try{
     const now = new Date();
     const key = 'maturity-assessment:' + now.toISOString();
-    const orgVals = ORG_DIMS.map(d => state[d.id]);
-    const techVals = TECH_DIMS.map(d => state[d.id]);
+    const orgVals = ORG_DIMS.filter(d => !naSet.has(d.id)).map(d => state[d.id]);
+    const techVals = TECH_DIMS.filter(d => !naSet.has(d.id)).map(d => state[d.id]);
     const payload = {
       date: now.toISOString(),
-      orgAvg: orgVals.reduce((a,b)=>a+b,0)/orgVals.length,
-      techAvg: techVals.reduce((a,b)=>a+b,0)/techVals.length,
+      orgAvg: orgVals.length ? orgVals.reduce((a,b)=>a+b,0)/orgVals.length : null,
+      techAvg: techVals.length ? techVals.reduce((a,b)=>a+b,0)/techVals.length : null,
       scores: {...state},
+      naDims: [...naSet],
       notes: document.getElementById('notes').value,
       actions: actionItems
     };
@@ -977,7 +1047,7 @@ async function loadHistory(){
       const d = new Date(v.date);
       const dateStr = d.toLocaleDateString('pl-PL', {year:'numeric', month:'short', day:'numeric'});
       const actionCount = (v.actions && v.actions.length) ? v.actions.length : 0;
-      return `<tr><td>${dateStr}</td><td>${v.orgAvg.toFixed(1)}</td><td>${v.techAvg.toFixed(1)}</td><td>${actionCount}</td></tr>`;
+      return `<tr><td>${dateStr}</td><td>${v.orgAvg === null || v.orgAvg === undefined ? '–' : v.orgAvg.toFixed(1)}</td><td>${v.techAvg === null || v.techAvg === undefined ? '–' : v.techAvg.toFixed(1)}</td><td>${actionCount}</td></tr>`;
     }).join('');
     el.innerHTML = `<table><thead><tr><th>Data</th><th>Organizacja</th><th>Technologia</th><th>Działania</th></tr></thead><tbody>${rows}</tbody></table>`;
   } catch(err){
