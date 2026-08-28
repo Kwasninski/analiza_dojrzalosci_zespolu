@@ -146,6 +146,62 @@
     font-size:15.5px;
     margin-bottom:10px;
   }
+  .title-row{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:10px;
+  }
+  .title-row .title{margin-bottom:0;}
+  .info-icon{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:16px;height:16px;
+    border-radius:50%;
+    background:var(--ink-soft);
+    color:var(--paper-card);
+    font-size:11px;
+    font-style:italic;
+    font-family:Georgia,"Iowan Old Style",serif;
+    flex:none;
+    cursor:default;
+  }
+  .info-icon:hover .tooltip,
+  .info-icon:focus .tooltip,
+  .info-icon:focus-within .tooltip{
+    opacity:1;
+    visibility:visible;
+  }
+  .info-icon .tooltip{
+    position:absolute;
+    bottom:135%;
+    left:0;
+    width:230px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:9px 11px;
+    border-radius:6px;
+    font-size:12.5px;
+    font-weight:400;
+    font-style:normal;
+    line-height:1.45;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity .12s ease;
+    z-index:6;
+    box-shadow:0 6px 14px rgba(0,0,0,0.18);
+    pointer-events:none;
+  }
+  .info-icon .tooltip::after{
+    content:'';
+    position:absolute;
+    top:100%;
+    left:6px;
+    border:5px solid transparent;
+    border-top-color:var(--ink);
+  }
   .card .level-text{
     font-size:14.5px;
     color:var(--ink-soft);
@@ -259,7 +315,7 @@
 
   .actions-list{margin-top:16px;}
   .action-row{
-    display:grid;grid-template-columns: 1fr 140px 130px 32px;gap:8px;margin-bottom:8px;
+    display:grid;grid-template-columns: 1fr 140px 130px auto;gap:8px;margin-bottom:8px;align-items:stretch;
   }
   @media(max-width:640px){.action-row{grid-template-columns:1fr;}}
   .action-row input{
@@ -269,6 +325,7 @@
   .action-row input::placeholder{color:#8B96A2;}
   .action-row .rm{
     background:transparent;border:1px solid rgba(255,255,255,0.25);color:var(--paper);border-radius:5px;cursor:pointer;
+    padding:8px 14px;font-size:13px;font-weight:600;white-space:nowrap;
   }
   .action-list-out{margin-top:6px;font-size:13.5px;}
   .action-list-out li{margin-bottom:4px;color:#D8DCE1;}
@@ -290,6 +347,14 @@
   .reco-card .dscore{font-family:Georgia,serif;font-size:13px;color:#9FAAB5;}
   .reco-card ul{margin:0;padding-left:18px;font-size:13.5px;color:#D8DCE1;}
   .reco-card ul li{margin-bottom:3px;}
+  .reco-card .reco-why{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px solid rgba(255,255,255,0.12);
+    font-size:12.5px;
+    color:#B7C0C9;
+    line-height:1.5;
+  }
   .reco-empty{font-size:13.5px;color:#9FAAB5;}
 </style>
 </head>
@@ -381,63 +446,63 @@
 
 <script>
 const ORG_DIMS = [
-  {id:'planowanie', title:'Podział i planowanie pracy', levels:[
+  {id:'planowanie', title:'Podział i planowanie pracy', help:"Chodzi o to, czy praca jest dzielona na małe, zarządzalne kawałki i planowana w krótkich, przewidywalnych cyklach — niezależnie, czy nazywacie to sprintem, iteracją czy po prostu tygodniowym planem.", levels:[
     'Zadania trafiają do zespołu bez podziału na mniejsze części ani planu na iterację.',
     'Zespół dzieli pracę doraźnie, plany często rozjeżdżają się z rzeczywistością.',
     'Zespół planuje pracę w krótkich cyklach, ale trafność planu bywa różna.',
     'Zespół dzieli pracę na małe przyrosty i zwykle dowozi to, co zaplanował.',
     'Zespół samodzielnie planuje krótkoterminowo z wysoką trafnością i elastycznie reaguje na zmiany.'
   ]},
-  {id:'priorytety', title:'Zarządzanie priorytetami i backlogiem', levels:[
+  {id:'priorytety', title:'Zarządzanie priorytetami i backlogiem', help:"Backlog to lista rzeczy do zrobienia. Pytanie dotyczy tego, czy ma on jasną, uzgodnioną kolejność ważności, rozumianą przez cały zespół, a nie tylko przez jedną osobę.", levels:[
     'Wszystko jest „pilne”, priorytety zmieniają się z dnia na dzień bez uzasadnienia.',
     'Priorytety istnieją, ale nie są spójnie rozumiane w zespole.',
     'Backlog jest uporządkowany, priorytety znane, choć rzadko rewidowane.',
     'Priorytety oparte o jasne kryteria (wartość, ryzyko), backlog aktualny i czytelny.',
     'Zespół współtworzy priorytety, rozumie kontekst biznesowy i potrafi je uzasadnić.'
   ]},
-  {id:'gotowosc', title:'Definicja gotowości i ukończenia', levels:[
+  {id:'gotowosc', title:'Definicja gotowości i ukończenia', help:"DoR („Definition of Ready”) to uzgodnione minimum, kiedy zadanie nadaje się do rozpoczęcia. DoD („Definition of Done”) to kryteria, kiedy jest naprawdę skończone. To nie oznacza czekania, aż wszystko będzie jasne — w zwinnym, zmiennym środowisku często trzeba zacząć, zanim wszystko jest domknięte. Chodzi o świadome nazwanie, co jeszcze jest niewiadomą, a nie o wyeliminowanie każdej niepewności przed startem.", levels:[
     'Brak wspólnego rozumienia, kiedy zadanie jest „gotowe do startu” lub „zrobione”.',
     'Definicje istnieją, ale są ignorowane pod presją czasu.',
     'Zespół zna definicje i zwykle ich przestrzega.',
-    'Kryteria gotowości i ukończenia są jasne i konsekwentnie egzekwowane.',
-    'Kryteria są żywym dokumentem, regularnie dopracowywanym i naturalnie przestrzeganym.'
+    'Zespół ma jasne minimum do rozpoczęcia pracy i świadomie nazywa niewiadome, które zostają do wyjaśnienia w trakcie.',
+    'Minimum gotowości jest dopasowywane do kontekstu — zespół celowo decyduje, kiedy zacząć mimo niepewności, i świadomie zarządza wynikającym z tego ryzykiem.'
   ]},
-  {id:'wspolpraca', title:'Współpraca i rozproszenie wiedzy', levels:[
+  {id:'wspolpraca', title:'Współpraca i rozproszenie wiedzy', help:"Bus factor to liczba osób, których nagła nieobecność (np. odejście z firmy) zatrzymałaby pracę zespołu. Im niższy, tym większe ryzyko. Ten wymiar pyta, jak bardzo wiedza jest rozproszona, a nie skupiona w jednej głowie.", levels:[
     'Silosy kompetencyjne — pojedyncze osoby są „jedynym punktem awarii” (bus factor 1).',
     'Sporadyczna wymiana wiedzy, głównie przy okazji problemów.',
     'Zespół świadomie stara się dzielić wiedzą, ale nie jest to systemowe.',
     'Regularne parowanie / przeglądy, wiedza rozproszona na kilka osób.',
     'Każdy element systemu może przejąć więcej niż jedna osoba, wiedza swobodnie krąży.'
   ]},
-  {id:'retro', title:'Retrospektywy i wdrażanie usprawnień', levels:[
+  {id:'retro', title:'Retrospektywy i wdrażanie usprawnień', help:"Retrospektywa to spotkanie zespołu poświęcone refleksji nad sposobem pracy — nie nad tym, co zrobiono, ale JAK to zrobiono — i wyciąganiu z tego wniosków na przyszłość.", levels:[
     'Retrospektywy się nie odbywają albo nic z nich nie wynika.',
     'Retrospektywy odbywają się, ale akcje rzadko są wdrażane.',
     'Część ustaleń z retrospektyw jest wdrażana, efekty bywają widoczne.',
     'Retrospektywy regularnie kończą się konkretnymi działaniami, które są dowożone.',
     'Ciągłe doskonalenie jest nawykiem zespołu, efekty usprawnień są mierzone.'
   ]},
-  {id:'autonomia', title:'Autonomia i odpowiedzialność', levels:[
+  {id:'autonomia', title:'Autonomia i odpowiedzialność', help:"Chodzi o to, ile decyzji — technicznych i procesowych — zespół może podjąć samodzielnie, bez czekania na akceptację z zewnątrz, i czy bierze odpowiedzialność za efekt tych decyzji.", levels:[
     'Zespół czeka na polecenia, brak poczucia właścicielstwa nad wynikiem.',
     'Zespół wykonuje decyzje podjęte gdzie indziej, rzadko je kwestionuje.',
     'Zespół podejmuje część decyzji technicznych samodzielnie.',
     'Zespół samodzielnie podejmuje większość decyzji procesowych i technicznych.',
     'Zespół w pełni bierze odpowiedzialność za rezultat i aktywnie kształtuje sposób pracy.'
   ]},
-  {id:'zaleznosci', title:'Zarządzanie zależnościami i ryzykiem', levels:[
+  {id:'zaleznosci', title:'Zarządzanie zależnościami i ryzykiem', help:"Zależność to sytuacja, w której wykonanie Waszej pracy wymaga czegoś od innego zespołu, systemu lub osoby. Pytanie dotyczy tego, jak wcześnie takie zależności są wykrywane i jak są zarządzane.", levels:[
     'Zależności ujawniają się w ostatniej chwili i powodują poślizgi.',
     'Zależności są znane, ale zarządzane reaktywnie.',
     'Zespół identyfikuje zależności z wyprzedzeniem, komunikacja bywa niespójna.',
     'Zależności i ryzyka są aktywnie śledzone i komunikowane innym zespołom.',
     'Zespół proaktywnie zarządza zależnościami, ryzyka są adresowane zanim staną się problemem.'
   ]},
-  {id:'bezp_psych', title:'Bezpieczeństwo psychologiczne', levels:[
+  {id:'bezp_psych', title:'Bezpieczeństwo psychologiczne', help:"Bezpieczeństwo psychologiczne to poczucie, że można przyznać się do błędu, zadać „głupie” pytanie albo skrytykować pomysł bez obawy o negatywne konsekwencje społeczne czy zawodowe.", levels:[
     'Ludzie ukrywają błędy i problemy, bo boją się konsekwencji.',
     'Błędy są ujawniane, ale niechętnie, zwykle dopiero gdy nie da się ich ukryć.',
     'Zespół zwykle mówi otwarcie o problemach, choć nie zawsze od razu.',
     'Ludzie swobodnie przyznają się do błędów i proszą o pomoc, bez obawy o ocenę.',
     'Kwestionowanie decyzji i przyznawanie się do niewiedzy jest normą, traktowane jako wartość, nie ryzyko.'
   ]},
-  {id:'tempo', title:'Zrównoważone tempo', levels:[
+  {id:'tempo', title:'Zrównoważone tempo', help:"Zrównoważone tempo to zasada z Extreme Programming (XP) mówiąca, że zespół powinien pracować w tempie, które da się utrzymać w długim okresie — bez chronicznych nadgodzin i wypalenia.", levels:[
     'Praca w nadgodzinach i pod presją jest normą, zespół jest chronicznie przeciążony.',
     'Przeciążenie zdarza się często, zwykle przy większych deadline’ach.',
     'Tempo bywa nierówne, ale zespół zwykle wraca do normy po intensywnych okresach.',
@@ -447,56 +512,56 @@ const ORG_DIMS = [
 ];
 
 const TECH_DIMS = [
-  {id:'deploy_freq', title:'Częstotliwość wdrożeń', levels:[
+  {id:'deploy_freq', title:'Częstotliwość wdrożeń', help:"Deployment Frequency (częstotliwość wdrożeń) — jak często zmiany trafiają na produkcję, czyli środowisko, z którego korzystają realni użytkownicy. To jedna z czterech kluczowych metryk DORA.", levels:[
     'Rzadziej niż raz w miesiącu, wdrożenia są duże i ryzykowne.',
     'Raz na miesiąc do kilku tygodni.',
     'Co tydzień lub kilka razy w tygodniu.',
     'Codziennie, zmiany są małe i przewidywalne.',
     'Wielokrotnie dziennie, na żądanie, bez specjalnych okien wdrożeniowych.'
   ]},
-  {id:'lead_time', title:'Czas realizacji zmiany (lead time)', levels:[
+  {id:'lead_time', title:'Czas realizacji zmiany (lead time)', help:"Lead Time for Changes — czas od momentu, gdy zmiana w kodzie jest gotowa (np. zatwierdzony commit), do chwili, gdy działa na produkcji. Druga z metryk DORA.", levels:[
     'Od commita do produkcji mijają tygodnie lub miesiące.',
     'Kilka dni do tygodnia.',
     'Poniżej doby.',
     'Kilka godzin.',
     'Poniżej godziny — zmiana trafia na produkcję niemal natychmiast po zatwierdzeniu.'
   ]},
-  {id:'change_failure', title:'Wskaźnik nieudanych zmian', levels:[
+  {id:'change_failure', title:'Wskaźnik nieudanych zmian', help:"Change Failure Rate — jaki procent wdrożeń powoduje awarię, degradację usługi lub wymaga poprawki (hotfix, rollback). Trzecia metryka DORA.", levels:[
     'Duża część wdrożeń wymaga hotfixa lub rollbacku.',
     'Problemy po wdrożeniu zdarzają się często i są kosztowne.',
     'Część wdrożeń wymaga poprawek, ale są one szybko wykrywane.',
     'Rzadkie problemy po wdrożeniu, wykrywane niemal natychmiast.',
     'Nieudane wdrożenia to rzadkość, wykrywane automatycznie, zanim wpłyną na użytkowników.'
   ]},
-  {id:'mttr', title:'Czas przywrócenia usługi (MTTR)', levels:[
+  {id:'mttr', title:'Czas przywrócenia usługi (MTTR)', help:"MTTR (Mean Time To Restore/Recovery) — jak szybko zespół przywraca działanie usługi po awarii. Czwarta metryka DORA.", levels:[
     'Przywrócenie usługi po awarii trwa dni.',
     'Przywrócenie trwa od kilkunastu godzin do doby.',
     'Przywrócenie trwa kilka godzin.',
     'Przywrócenie trwa poniżej godziny.',
     'Przywrócenie trwa minuty, dzięki gotowym procedurom i automatyzacji.'
   ]},
-  {id:'testy_ci', title:'Automatyzacja testów i CI', levels:[
+  {id:'testy_ci', title:'Automatyzacja testów i CI', help:"CI (Continuous Integration, ciągła integracja) to praktyka częstego łączenia zmian w kodzie z automatycznym uruchamianiem testów, żeby wykrywać problemy jak najwcześniej. Ten wymiar pyta, jak bardzo zespół polega na automatycznych testach zamiast ręcznego sprawdzania.", levels:[
     'Testy są głównie manualne, CI nie istnieje albo pipeline jest niestabilny.',
     'Podstawowe testy automatyczne, pipeline działa, ale bywa zawodny.',
     'Solidny zestaw testów automatycznych uruchamiany na commit, pipeline jest zaufany.',
     'Wysokie pokrycie testami różnych poziomów, szybki i stabilny pipeline.',
     'Testy automatyczne są pełnym źródłem zaufania do jakości, zespół wdraża bez obaw.'
   ]},
-  {id:'cicd_trunk', title:'Integracja i dostarczanie kodu (CI/CD, krótkie gałęzie)', levels:[
+  {id:'cicd_trunk', title:'Integracja i dostarczanie kodu (CI/CD, krótkie gałęzie)', help:"CD (Continuous Delivery/Deployment) to automatyzacja drogi od zatwierdzonej zmiany do produkcji. Trunk-based development to praca na krótko żyjących gałęziach kodu (albo wprost na głównej gałęzi), często integrowanych, zamiast trzymania długich, oddzielnych gałęzi.", levels:[
     'Długo żyjące gałęzie, rzadkie i bolesne scalenia.',
     'Gałęzie żyją kilka dni do tygodnia, scalenia bywają problematyczne.',
     'Krótkie gałęzie, częsta integracja z główną linią kodu.',
     'Niemal trunk-based development, automatyczna ścieżka do wdrożenia po zatwierdzeniu.',
     'Pełny trunk-based development — każda zmiana automatycznie przechodzi przez pipeline do produkcji.'
   ]},
-  {id:'observability', title:'Observability i monitoring', levels:[
+  {id:'observability', title:'Observability i monitoring', help:"Observability (obserwowalność) to zdolność systemu do pokazywania, co się w nim dzieje — przez logi, metryki i tracing — tak żeby zespół mógł zrozumieć i zdiagnozować problem, zanim zgłosi go użytkownik.", levels:[
     'O problemach zespół dowiaduje się od użytkowników.',
     'Podstawowe logi/metryki istnieją, ale nikt regularnie ich nie sprawdza.',
     'Zespół ma dashboardy i alerty na kluczowe metryki.',
     'Pełny wgląd w system (logi, metryki, tracing), alerty są wiarygodne.',
     'Problemy są wykrywane i często naprawiane, zanim zauważy je użytkownik.'
   ]},
-  {id:'iac_dlug', title:'Infrastruktura jako kod i dług techniczny', levels:[
+  {id:'iac_dlug', title:'Infrastruktura jako kod i dług techniczny', help:"IaC (Infrastructure as Code) to zarządzanie infrastrukturą przez kod, a nie ręczną konfigurację, dzięki czemu jest powtarzalna i wersjonowana. Dług techniczny to skróty i kompromisy podjęte pod presją czasu, które trzeba będzie kiedyś „spłacić”.", levels:[
     'Środowiska konfigurowane ręcznie, dług techniczny narasta bez śledzenia.',
     'Częściowa automatyzacja infrastruktury, dług techniczny jest znany, ale ignorowany.',
     'Infrastruktura w dużej części jako kod, dług techniczny jest widoczny w backlogu.',
@@ -506,75 +571,127 @@ const TECH_DIMS = [
 ];
 
 const RECOMMENDATIONS = {
-  planowanie: [
-    'Wprowadźcie krótszy cykl planowania (1–2 tygodnie) z jasnym celem iteracji.',
-    'Dzielcie duże zadania na fragmenty możliwe do ukończenia w 1–3 dni.'
-  ],
-  priorytety: [
-    'Ustalcie jawne kryteria priorytetyzacji (np. wartość biznesowa vs wysiłek) i spiszcie je.',
-    'Przeglądajcie i porządkujcie backlog regularnie, nie tylko tuż przed planowaniem.'
-  ],
-  gotowosc: [
-    'Spiszcie wspólną Definition of Ready i Definition of Done — nawet w 3–4 punktach.',
-    'Zacznijcie odmawiać podejmowania zadań, które nie spełniają DoR.'
-  ],
-  wspolpraca: [
-    'Wprowadźcie regularne parowanie lub przeglądy kodu na krytycznych obszarach.',
-    'Zmapujcie, kto jest jedynym ekspertem w danym obszarze, i zaplanujcie przekazanie wiedzy.'
-  ],
-  retro: [
-    'Kończcie każdą retrospektywę maksymalnie 1–2 konkretnymi akcjami z właścicielem i terminem.',
-    'Zaczynajcie kolejną retrospektywę od przeglądu, co się stało z akcjami z poprzedniej.'
-  ],
-  autonomia: [
-    'Zacznijcie od jednej kategorii decyzji (np. techniczne „jak”), którą zespół podejmuje bez akceptacji z zewnątrz.',
-    'Ustalcie jasno, gdzie kończy się mandat zespołu, a zaczyna eskalacja.'
-  ],
-  zaleznosci: [
-    'Wprowadźcie prosty rejestr zależności międzyzespołowych, przeglądany na bieżąco.',
-    'Zgłaszajcie zależność w momencie jej odkrycia, nie czekając na planowanie.'
-  ],
-  bezp_psych: [
-    'Wprowadźcie zasadę „błąd omawiamy bez szukania winnego” i konsekwentnie ją stosujcie.',
-    'Niech lider/senior jako pierwszy przyzna się do błędu na forum — to modeluje zachowanie.'
-  ],
-  tempo: [
-    'Śledźcie sygnały przeciążenia (nadgodziny, przenoszone zadania) i reagujcie na nie na retro.',
-    'Ustalcie limit pracy w toku (WIP), żeby ograniczyć rozpraszanie i presję.'
-  ],
-  deploy_freq: [
-    'Zmniejszcie wielkość pojedynczego wdrożenia — mniejsze, częstsze zmiany.',
-    'Zautomatyzujcie choć jeden krok procesu wdrożenia, który dziś jest ręczny.'
-  ],
-  lead_time: [
-    'Zmapujcie drogę zmiany od commita do produkcji i znajdźcie największe wąskie gardło.',
-    'Skróćcie czas oczekiwania na code review (np. limit 24h na pierwszą odpowiedź).'
-  ],
-  change_failure: [
-    'Wprowadźcie checklistę przed wdrożeniem dla najbardziej ryzykownych zmian.',
-    'Dodajcie testy regresyjne dla obszarów, które najczęściej się psują.'
-  ],
-  mttr: [
-    'Spiszcie prostą procedurę reagowania na incydent (kto, co, w jakiej kolejności).',
-    'Poćwiczcie scenariusz awarii (game day) choć raz, żeby sprawdzić, gdzie są luki.'
-  ],
-  testy_ci: [
-    'Zacznijcie od automatyzacji testów dla najbardziej krytycznej ścieżki systemu.',
-    'Ustabilizujcie istniejący pipeline CI, zanim dodacie kolejne testy — flaky testy podważają zaufanie.'
-  ],
-  cicd_trunk: [
-    'Skróćcie czas życia gałęzi funkcyjnych — cel: poniżej 1–2 dni.',
-    'Wprowadźcie feature flagi, żeby móc integrować niedokończoną pracę bez ryzyka.'
-  ],
-  observability: [
-    'Dodajcie alerty na 2–3 najważniejsze metryki (dostępność, błędy, czas odpowiedzi).',
-    'Ustalcie jeden dashboard, który zespół sprawdza codziennie, nie tylko w czasie awarii.'
-  ],
-  iac_dlug: [
-    'Zacznijcie od zapisania w kodzie konfiguracji jednego, najczęściej zmienianego środowiska.',
-    'Załóżcie widoczny rejestr długu technicznego i przeglądajcie go co sprint lub miesiąc.'
-  ]
+  planowanie: {
+    steps: [
+      'Wprowadźcie krótszy cykl planowania (1–2 tygodnie) z jasnym celem iteracji.',
+      'Dzielcie duże zadania na fragmenty możliwe do ukończenia w 1–3 dni.'
+    ],
+    why: 'Zespoły, które nie potrafią rozbić pracy na małe kawałki, tracą przewidywalność — plany się rozjeżdżają, a zaufanie biznesu do deklarowanych terminów spada. To zwykle najszybciej przekłada się na spokojniejszą współpracę z interesariuszami.'
+  },
+  priorytety: {
+    steps: [
+      'Ustalcie jawne kryteria priorytetyzacji (np. wartość biznesowa vs wysiłek) i spiszcie je.',
+      'Przeglądajcie i porządkujcie backlog regularnie, nie tylko tuż przed planowaniem.'
+    ],
+    why: 'Brak jasnych priorytetów oznacza, że zespół często pracuje nad rzeczami mniej wartościowymi kosztem tych ważnych — to prosta strata, którą łatwo ograniczyć bez dodatkowych zasobów.'
+  },
+  gotowosc: {
+    steps: [
+      'Zamiast pełnej checklisty, ustalcie „bezpieczne minimum” do startu — np. znany cel i osobę, która decyduje, gdy coś się zmieni w trakcie.',
+      'Gdy zaczynacie coś niedoprecyzowanego, nazwijcie to wprost jako założenie robocze i ustalcie, kiedy je zweryfikujecie.'
+    ],
+    why: 'Sztywne trzymanie się pełnej DoR bywa nierealne w bardzo zmiennym, zwinnym środowisku — i to nie musi być problemem, jeśli niepewność jest świadomie nazwana i zarządzana, a nie ignorowana w milczeniu. Chodzi o to, żeby ryzyko związane z brakiem jasności było widoczne, a nie o wyeliminowanie każdej niewiadomej przed startem.'
+  },
+  wspolpraca: {
+    steps: [
+      'Wprowadźcie regularne parowanie lub przeglądy kodu na krytycznych obszarach.',
+      'Zmapujcie, kto jest jedynym ekspertem w danym obszarze, i zaplanujcie przekazanie wiedzy.'
+    ],
+    why: 'Wiedza skoncentrowana w jednej osobie to realne ryzyko biznesowe — choroba, urlop czy odejście tej osoby może zatrzymać cały obszar pracy zespołu.'
+  },
+  retro: {
+    steps: [
+      'Kończcie każdą retrospektywę maksymalnie 1–2 konkretnymi akcjami z właścicielem i terminem.',
+      'Zaczynajcie kolejną retrospektywę od przeglądu, co się stało z akcjami z poprzedniej.'
+    ],
+    why: 'Retrospektywy bez wdrożonych działań to sygnał, że zespół zbiera obserwacje, ale się nie rozwija — z czasem obniża to zaangażowanie, bo ludzie przestają wierzyć, że ich głos coś zmienia.'
+  },
+  autonomia: {
+    steps: [
+      'Zacznijcie od jednej kategorii decyzji (np. techniczne „jak”), którą zespół podejmuje bez akceptacji z zewnątrz.',
+      'Ustalcie jasno, gdzie kończy się mandat zespołu, a zaczyna eskalacja.'
+    ],
+    why: 'Zespół bez realnej autonomii wolniej reaguje na problemy i mniej się angażuje — decyzje czekają w kolejce do kogoś z zewnątrz, zamiast być podejmowane na miejscu.'
+  },
+  zaleznosci: {
+    steps: [
+      'Wprowadźcie prosty rejestr zależności międzyzespołowych, przeglądany na bieżąco.',
+      'Zgłaszajcie zależność w momencie jej odkrycia, nie czekając na planowanie.'
+    ],
+    why: 'Niewidoczne zależności to jedno z najczęstszych źródeł poślizgów w terminach — im później są odkrywane, tym drożej kosztuje ich obsłużenie.'
+  },
+  bezp_psych: {
+    steps: [
+      'Wprowadźcie zasadę „błąd omawiamy bez szukania winnego” i konsekwentnie ją stosujcie.',
+      'Niech lider/senior jako pierwszy przyzna się do błędu na forum — to modeluje zachowanie.'
+    ],
+    why: 'Tam, gdzie ludzie boją się mówić o błędach, problemy ujawniają się później i są droższe w naprawie, a zespół traci szansę uczenia się na bieżąco.'
+  },
+  tempo: {
+    steps: [
+      'Śledźcie sygnały przeciążenia (nadgodziny, przenoszone zadania) i reagujcie na nie na retro.',
+      'Ustalcie limit pracy w toku (WIP), żeby ograniczyć rozpraszanie i presję.'
+    ],
+    why: 'Chroniczne przeciążenie prowadzi do wypalenia i rotacji w zespole — krótkoterminowe przyspieszenie kosztem tempa zwykle odbija się długoterminową stratą wydajności.'
+  },
+  deploy_freq: {
+    steps: [
+      'Zmniejszcie wielkość pojedynczego wdrożenia — mniejsze, częstsze zmiany.',
+      'Zautomatyzujcie choć jeden krok procesu wdrożenia, który dziś jest ręczny.'
+    ],
+    why: 'Rzadkie, duże wdrożenia są z natury bardziej ryzykowne niż częste, małe zmiany — im rzadziej wdrażacie, tym więcej się kumuluje w jednym wdrożeniu i tym trudniej znaleźć przyczynę problemu.'
+  },
+  lead_time: {
+    steps: [
+      'Zmapujcie drogę zmiany od commita do produkcji i znajdźcie największe wąskie gardło.',
+      'Skróćcie czas oczekiwania na code review (np. limit 24h na pierwszą odpowiedź).'
+    ],
+    why: 'Długi czas od commita do produkcji oznacza, że feedback z produkcji wraca późno — błędy i złe założenia są odkrywane, gdy poprawka jest już droższa.'
+  },
+  change_failure: {
+    steps: [
+      'Wprowadźcie checklistę przed wdrożeniem dla najbardziej ryzykownych zmian.',
+      'Dodajcie testy regresyjne dla obszarów, które najczęściej się psują.'
+    ],
+    why: 'Wysoki odsetek nieudanych wdrożeń podważa zaufanie do procesu wdrożeniowego i skłania zespół do jeszcze rzadszego, bardziej ostrożnego wdrażania — co pogłębia problem zamiast go rozwiązywać.'
+  },
+  mttr: {
+    steps: [
+      'Spiszcie prostą procedurę reagowania na incydent (kto, co, w jakiej kolejności).',
+      'Poćwiczcie scenariusz awarii (game day) choć raz, żeby sprawdzić, gdzie są luki.'
+    ],
+    why: 'Długi czas przywracania usługi bezpośrednio przekłada się na koszt biznesowy awarii — to jeden z wymiarów, gdzie inwestycja zwraca się już przy pierwszym poważniejszym incydencie.'
+  },
+  testy_ci: {
+    steps: [
+      'Zacznijcie od automatyzacji testów dla najbardziej krytycznej ścieżki systemu.',
+      'Ustabilizujcie istniejący pipeline CI, zanim dodacie kolejne testy — flaky testy podważają zaufanie.'
+    ],
+    why: 'Bez zaufanych testów automatycznych każda zmiana niesie ukryte ryzyko, a zespół zaczyna kompensować to strachem przed wdrażaniem — co spowalnia wszystko inne.'
+  },
+  cicd_trunk: {
+    steps: [
+      'Skróćcie czas życia gałęzi funkcyjnych — cel: poniżej 1–2 dni.',
+      'Wprowadźcie feature flagi, żeby móc integrować niedokończoną pracę bez ryzyka.'
+    ],
+    why: 'Długo żyjące gałęzie kodu to odroczony koszt — im dłużej czekacie z integracją, tym bardziej bolesne i czasochłonne stają się konflikty przy scalaniu.'
+  },
+  observability: {
+    steps: [
+      'Dodajcie alerty na 2–3 najważniejsze metryki (dostępność, błędy, czas odpowiedzi).',
+      'Ustalcie jeden dashboard, który zespół sprawdza codziennie, nie tylko w czasie awarii.'
+    ],
+    why: 'Brak wglądu w system oznacza, że o problemach dowiadujecie się od zdenerwowanych użytkowników, a nie z własnych narzędzi — to wydłuża czas reakcji i kosztuje zaufanie klientów.'
+  },
+  iac_dlug: {
+    steps: [
+      'Zacznijcie od zapisania w kodzie konfiguracji jednego, najczęściej zmienianego środowiska.',
+      'Załóżcie widoczny rejestr długu technicznego i przeglądajcie go co sprint lub miesiąc.'
+    ],
+    why: 'Ręcznie konfigurowane środowiska i niewidoczny dług techniczny to źródło niespodzianek — trudnych do odtworzenia awarii i coraz droższych zmian w miarę jak dług narasta.'
+  }
 };
+
 const state = {};
 [...ORG_DIMS, ...TECH_DIMS].forEach(d => state[d.id] = 3);
 
@@ -582,7 +699,10 @@ function renderCards(dims, containerId, colorClass){
   const el = document.getElementById(containerId);
   el.innerHTML = dims.map(d => `
     <div class="card">
-      <div class="title">${d.title}</div>
+      <div class="title-row">
+        <div class="title">${d.title}</div>
+        ${d.help ? `<span class="info-icon" tabindex="0">i<span class="tooltip">${d.help}</span></span>` : ''}
+      </div>
       <div class="level-text" id="lvl-${d.id}">${d.levels[2]}</div>
       <input type="range" min="1" max="5" step="1" value="3" id="range-${d.id}" data-id="${d.id}">
       <div class="scale-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
@@ -678,15 +798,19 @@ function renderRecommendations(all){
     el.innerHTML = '<div class="reco-empty">Wszystkie wymiary oceniacie na 4+ — solidny wynik. Wybierzcie jeden, w którym chcecie pójść jeszcze dalej, i potraktujcie go jako cel rozwojowy na najbliższy kwartał.</div>';
     return;
   }
-  el.innerHTML = candidates.map(d => `
+  el.innerHTML = candidates.map(d => {
+    const r = RECOMMENDATIONS[d.id] || {steps:[], why:''};
+    return `
     <div class="reco-card">
       <div class="head">
         <span class="dname">${d.title}</span>
         <span class="dscore">${state[d.id]}/5</span>
       </div>
-      <ul>${(RECOMMENDATIONS[d.id] || []).map(r => `<li>${r}</li>`).join('')}</ul>
+      <ul>${r.steps.map(s => `<li>${s}</li>`).join('')}</ul>
+      ${r.why ? `<div class="reco-why">${r.why}</div>` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 renderCards(ORG_DIMS, 'orgCards');
