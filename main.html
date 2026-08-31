@@ -411,6 +411,18 @@
   }
   .reco-card .dname{font-weight:600;font-size:14.5px;}
   .reco-card .dscore{font-family:Georgia,serif;font-size:13px;color:#9FAAB5;}
+  .reco-tier{
+    display:inline-block;
+    font-size:10.5px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:var(--org);
+    border:1px solid rgba(201,138,62,0.4);
+    border-radius:3px;
+    padding:2px 7px;
+    margin-bottom:8px;
+  }
   .reco-card ul{margin:0;padding-left:18px;font-size:13.5px;color:#D8DCE1;}
   .reco-card ul li{margin-bottom:3px;}
   .reco-card .reco-why{
@@ -546,12 +558,12 @@ const ORG_DIMS = [
     'Regularne parowanie / przeglądy, wiedza rozproszona na kilka osób.',
     'Każdy element systemu może przejąć więcej niż jedna osoba, wiedza swobodnie krąży.'
   ]},
-  {id:'retro', title:'Retrospektywy i wdrażanie usprawnień', help:"Retrospektywa to spotkanie zespołu poświęcone refleksji nad sposobem pracy — nie nad tym, co zrobiono, ale JAK to zrobiono — i wyciąganiu z tego wniosków na przyszłość.", levels:[
-    'Retrospektywy się nie odbywają albo nic z nich nie wynika.',
-    'Retrospektywy odbywają się, ale akcje rzadko są wdrażane.',
-    'Część ustaleń z retrospektyw jest wdrażana, efekty bywają widoczne.',
-    'Retrospektywy regularnie kończą się konkretnymi działaniami, które są dowożone.',
-    'Ciągłe doskonalenie jest nawykiem zespołu, efekty usprawnień są mierzone.'
+  {id:'retro', title:'Regularna refleksja i wdrażanie usprawnień', help:"Nie chodzi o konkretną nazwę spotkania (np. retrospektywę) — liczy się regularny, świadomy moment przyjrzenia się temu, JAK zespół pracuje, niezależnie od formy, i to, czy coś z tego faktycznie się zmienia.", levels:[
+    'Zespół nie ma żadnego regularnego momentu na refleksję nad sposobem pracy — ani nic z tego nie wynika.',
+    'Taka refleksja się zdarza, ale wnioski rzadko są wdrażane.',
+    'Część wniosków z takich rozmów jest wdrażana, efekty bywają widoczne.',
+    'Regularne rozmowy o sposobie pracy kończą się konkretnymi działaniami, które są dowożone.',
+    'Ciągłe doskonalenie jest nawykiem zespołu niezależnie od formy — efekty usprawnień są mierzone.'
   ]},
   {id:'autonomia', title:'Autonomia i odpowiedzialność', help:"Chodzi o to, ile decyzji — technicznych i procesowych — zespół może podjąć samodzielnie, bez czekania na akceptację z zewnątrz, i czy bierze odpowiedzialność za efekt tych decyzji.", levels:[
     'Zespół czeka na polecenia, brak poczucia właścicielstwa nad wynikiem.',
@@ -580,6 +592,13 @@ const ORG_DIMS = [
     'Tempo bywa nierówne, ale zespół zwykle wraca do normy po intensywnych okresach.',
     'Tempo jest w większości stabilne i możliwe do utrzymania w długim okresie.',
     'Zespół pracuje w stałym, zrównoważonym tempie — przeciążenie to wyjątek i szybko adresowany sygnał.'
+  ]},
+  {id:'jakosc_kodu', title:'Jakość inżynierska kodu i wspólna własność', help:"Chodzi o codzienne praktyki inżynierskie z Extreme Programming: refaktoryzację (poprawianie struktury kodu bez zmiany jego zachowania), collective code ownership (każdy może zmieniać każdy fragment kodu, nie tylko jego autor) i dbanie o prostotę rozwiązań, a nie tylko o to, żeby „działało”.", levels:[
+    'Kod pisany w pojedynkę, bez przeglądów — nikt nie odważa się go refaktoryzować z obawy przed zepsuciem.',
+    'Sporadyczne przeglądy kodu, refaktoryzacja odkładana „na później”, które nigdy nie nadchodzi.',
+    'Code review jest normą, refaktoryzacja zdarza się przy okazji, ale nie jest systematyczna.',
+    'Zespół regularnie refaktoryzuje i dba o prostotę rozwiązań — kod jest „wspólny”, każdy może go zmieniać.',
+    'Prostota i czytelność kodu to nawyk, nie wysiłek. Parowanie lub mob programming i wspólna własność kodu są normą, jakość rośnie z czasem zamiast spadać.'
   ]}
 ];
 
@@ -644,123 +663,292 @@ const TECH_DIMS = [
 
 const RECOMMENDATIONS = {
   planowanie: {
-    steps: [
-      'Wprowadźcie krótszy cykl planowania (1–2 tygodnie) z jasnym celem iteracji.',
-      'Dzielcie duże zadania na fragmenty możliwe do ukończenia w 1–3 dni.'
-    ],
-    why: 'Zespoły, które nie potrafią rozbić pracy na małe kawałki, tracą przewidywalność — plany się rozjeżdżają, a zaufanie biznesu do deklarowanych terminów spada. To zwykle najszybciej przekłada się na spokojniejszą współpracę z interesariuszami.'
+    low: {
+      steps: [
+        'Zacznijcie od zapisania w jednym miejscu, co dokładnie robicie w najbliższym tygodniu — nawet na kartce czy w prostej liście.',
+        'Ustalcie jeden stały moment w tygodniu na wspólne spojrzenie na to, co przed Wami.'
+      ],
+      why: 'Bez żadnego punktu odniesienia trudno w ogóle zauważyć, że coś się opóźnia. Zanim zajmiecie się dokładnością planowania, potrzebujecie punktu startowego, od którego da się cokolwiek mierzyć.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie krótszy cykl planowania (1–2 tygodnie) z jasnym celem iteracji.',
+        'Dzielcie duże zadania na fragmenty możliwe do ukończenia w 1–3 dni.'
+      ],
+      why: 'Zespoły, które nie potrafią rozbić pracy na małe kawałki, tracą przewidywalność — plany się rozjeżdżają, a zaufanie biznesu do deklarowanych terminów spada. To zwykle najszybciej przekłada się na spokojniejszą współpracę z interesariuszami.'
+    }
   },
   priorytety: {
-    steps: [
-      'Ustalcie jawne kryteria priorytetyzacji (np. wartość biznesowa vs wysiłek) i spiszcie je.',
-      'Przeglądajcie i porządkujcie backlog regularnie, nie tylko tuż przed planowaniem.'
-    ],
-    why: 'Brak jasnych priorytetów oznacza, że zespół często pracuje nad rzeczami mniej wartościowymi kosztem tych ważnych — to prosta strata, którą łatwo ograniczyć bez dodatkowych zasobów.'
+    low: {
+      steps: [
+        'Ustalcie, kto ma ostateczny głos w sprawie kolejności prac, jeśli zespół się nie zgadza.',
+        'Zróbcie jedną wspólną listę „co robimy teraz” — nawet niedoskonałą — zamiast wielu równoległych, sprzecznych list.'
+      ],
+      why: 'Brak jednego miejsca i jednej osoby odpowiedzialnej za priorytety oznacza, że każdy pracuje nad czymś innym z przekonaniem, że to najważniejsze — a to rozprasza zespół bardziej niż niedoskonała kolejność.'
+    },
+    mid: {
+      steps: [
+        'Ustalcie jawne kryteria priorytetyzacji (np. wartość biznesowa vs wysiłek) i spiszcie je.',
+        'Przeglądajcie i porządkujcie backlog regularnie, nie tylko tuż przed planowaniem.'
+      ],
+      why: 'Brak jasnych priorytetów oznacza, że zespół często pracuje nad rzeczami mniej wartościowymi kosztem tych ważnych — to prosta strata, którą łatwo ograniczyć bez dodatkowych zasobów.'
+    }
   },
   gotowosc: {
-    steps: [
-      'Zamiast pełnej checklisty, ustalcie „bezpieczne minimum” do startu — np. znany cel i osobę, która decyduje, gdy coś się zmieni w trakcie.',
-      'Gdy zaczynacie coś niedoprecyzowanego, nazwijcie to wprost jako założenie robocze i ustalcie, kiedy je zweryfikujecie.'
-    ],
-    why: 'Sztywne trzymanie się pełnej DoR bywa nierealne w bardzo zmiennym, zwinnym środowisku — i to nie musi być problemem, jeśli niepewność jest świadomie nazwana i zarządzana, a nie ignorowana w milczeniu. Chodzi o to, żeby ryzyko związane z brakiem jasności było widoczne, a nie o wyeliminowanie każdej niewiadomej przed startem.'
+    low: {
+      steps: [
+        'Zanim zaczniecie zadanie, zadajcie sobie jedno pytanie: „czy wiemy, po czym poznamy, że to jest zrobione?” — jeśli nie, dopytajcie, zanim ruszycie.',
+        'Spiszcie 2–3 najczęstsze powody, przez które zadania „wracają” w trakcie pracy, i zacznijcie je sprawdzać na starcie.'
+      ],
+      why: 'Bez żadnego wspólnego punktu odniesienia zespół nie ma jak ocenić, czy zadanie faktycznie nadaje się do podjęcia — efekt to najczęściej odkrywanie brakujących informacji w najgorszym możliwym momencie, czyli w połowie pracy.'
+    },
+    mid: {
+      steps: [
+        'Zamiast pełnej checklisty, ustalcie „bezpieczne minimum” do startu — np. znany cel i osobę, która decyduje, gdy coś się zmieni w trakcie.',
+        'Gdy zaczynacie coś niedoprecyzowanego, nazwijcie to wprost jako założenie robocze i ustalcie, kiedy je zweryfikujecie.'
+      ],
+      why: 'Sztywne trzymanie się pełnej DoR bywa nierealne w bardzo zmiennym, zwinnym środowisku — i to nie musi być problemem, jeśli niepewność jest świadomie nazwana i zarządzana, a nie ignorowana w milczeniu. Chodzi o to, żeby ryzyko związane z brakiem jasności było widoczne, a nie o wyeliminowanie każdej niewiadomej przed startem.'
+    }
   },
   wspolpraca: {
-    steps: [
-      'Wprowadźcie regularne parowanie lub przeglądy kodu na krytycznych obszarach.',
-      'Zmapujcie, kto jest jedynym ekspertem w danym obszarze, i zaplanujcie przekazanie wiedzy.'
-    ],
-    why: 'Wiedza skoncentrowana w jednej osobie to realne ryzyko biznesowe — choroba, urlop czy odejście tej osoby może zatrzymać cały obszar pracy zespołu.'
+    low: {
+      steps: [
+        'Zróbcie prostą mapę: kto jest jedyną osobą znającą dany obszar systemu — to najczęściej zaskakuje sam zespół.',
+        'Umówcie się na jedno wspólne zadanie w parze w najbliższym tygodniu, żeby zacząć rozprowadzać wiedzę.'
+      ],
+      why: 'Zespół, który nawet nie wie, gdzie ma pojedyncze punkty awarii, nie może nimi świadomie zarządzać — pierwszym krokiem jest po prostu zobaczyć, gdzie one są.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie regularne parowanie lub przeglądy kodu na krytycznych obszarach.',
+        'Zmapujcie, kto jest jedynym ekspertem w danym obszarze, i zaplanujcie przekazanie wiedzy.'
+      ],
+      why: 'Wiedza skoncentrowana w jednej osobie to realne ryzyko biznesowe — choroba, urlop czy odejście tej osoby może zatrzymać cały obszar pracy zespołu.'
+    }
   },
   retro: {
-    steps: [
-      'Kończcie każdą retrospektywę maksymalnie 1–2 konkretnymi akcjami z właścicielem i terminem.',
-      'Zaczynajcie kolejną retrospektywę od przeglądu, co się stało z akcjami z poprzedniej.'
-    ],
-    why: 'Retrospektywy bez wdrożonych działań to sygnał, że zespół zbiera obserwacje, ale się nie rozwija — z czasem obniża to zaangażowanie, bo ludzie przestają wierzyć, że ich głos coś zmienia.'
+    low: {
+      steps: [
+        'Umówcie na sztywno jeden, stały termin w miesiącu na rozmowę „jak nam idzie”, nawet krótką (30 minut).',
+        'Na pierwsze takie spotkanie przynieście po jednej rzeczy, która was ostatnio zirytowała w sposobie pracy — to naturalny start rozmowy.'
+      ],
+      why: 'Zespół, który nigdy się nie zatrzymuje, nie ma szans zauważyć wzorców w tym, co go spowalnia. Zanim zajmiecie się wdrażaniem wniosków, potrzebujecie w ogóle regularnego momentu, żeby je wyłapać.'
+    },
+    mid: {
+      steps: [
+        'Kończcie każdą taką rozmowę maksymalnie 1–2 konkretnymi akcjami z właścicielem i terminem.',
+        'Zaczynajcie kolejną rozmowę od przeglądu, co się stało z akcjami z poprzedniego razu.'
+      ],
+      why: 'Refleksja bez wdrożonych działań to sygnał, że zespół zbiera obserwacje, ale się nie rozwija — z czasem obniża to zaangażowanie, bo ludzie przestają wierzyć, że ich głos coś zmienia.'
+    }
   },
   autonomia: {
-    steps: [
-      'Zacznijcie od jednej kategorii decyzji (np. techniczne „jak”), którą zespół podejmuje bez akceptacji z zewnątrz.',
-      'Ustalcie jasno, gdzie kończy się mandat zespołu, a zaczyna eskalacja.'
-    ],
-    why: 'Zespół bez realnej autonomii wolniej reaguje na problemy i mniej się angażuje — decyzje czekają w kolejce do kogoś z zewnątrz, zamiast być podejmowane na miejscu.'
+    low: {
+      steps: [
+        'Wybierzcie jedną, najmniej ryzykowną kategorię decyzji (np. jak podzielić pracę wewnątrz zespołu) i jawnie ogłoście, że to zespół o niej decyduje.',
+        'Zapytajcie wprost przełożonego lub interesariuszy, gdzie faktycznie kończy się ich potrzeba kontroli — granica bywa szersza, niż zespół zakłada.'
+      ],
+      why: 'Zespoły bez żadnej autonomii często nawet nie próbują jej przetestować, zakładając z góry, że i tak nie dostaną zgody — a to błędne koło nie przerwie się samo bez pierwszego, małego kroku.'
+    },
+    mid: {
+      steps: [
+        'Zacznijcie od jednej kategorii decyzji (np. techniczne „jak”), którą zespół podejmuje bez akceptacji z zewnątrz.',
+        'Ustalcie jasno, gdzie kończy się mandat zespołu, a zaczyna eskalacja.'
+      ],
+      why: 'Zespół bez realnej autonomii wolniej reaguje na problemy i mniej się angażuje — decyzje czekają w kolejce do kogoś z zewnątrz, zamiast być podejmowane na miejscu.'
+    }
   },
   zaleznosci: {
-    steps: [
-      'Wprowadźcie prosty rejestr zależności międzyzespołowych, przeglądany na bieżąco.',
-      'Zgłaszajcie zależność w momencie jej odkrycia, nie czekając na planowanie.'
-    ],
-    why: 'Niewidoczne zależności to jedno z najczęstszych źródeł poślizgów w terminach — im później są odkrywane, tym drożej kosztuje ich obsłużenie.'
+    low: {
+      steps: [
+        'Zacznijcie zapisywać zależności tam, gdzie je zauważycie — choćby w jednym wspólnym dokumencie, bez formalnego procesu.',
+        'Na najbliższym planowaniu zapytajcie wprost: „czego potrzebujemy od kogoś spoza zespołu, żeby to zrobić?”'
+      ],
+      why: 'Jeśli zależności nigdy nie są nazywane na głos, zespół dowiaduje się o nich dopiero wtedy, gdy już powodują poślizg — samo zapisywanie ich, nawet nieformalnie, to już duży krok naprzód.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie prosty rejestr zależności międzyzespołowych, przeglądany na bieżąco.',
+        'Zgłaszajcie zależność w momencie jej odkrycia, nie czekając na planowanie.'
+      ],
+      why: 'Niewidoczne zależności to jedno z najczęstszych źródeł poślizgów w terminach — im później są odkrywane, tym drożej kosztuje ich obsłużenie.'
+    }
   },
   bezp_psych: {
-    steps: [
-      'Wprowadźcie zasadę „błąd omawiamy bez szukania winnego” i konsekwentnie ją stosujcie.',
-      'Niech lider/senior jako pierwszy przyzna się do błędu na forum — to modeluje zachowanie.'
-    ],
-    why: 'Tam, gdzie ludzie boją się mówić o błędach, problemy ujawniają się później i są droższe w naprawie, a zespół traci szansę uczenia się na bieżąco.'
+    low: {
+      steps: [
+        'Zacznijcie od jednego, konkretnego zobowiązania: przez najbliższy miesiąc nikt nie jest krytykowany za zgłoszenie błędu, tylko za jego ukrycie.',
+        'Jako lider lub senior znajdźcie okazję, żeby publicznie przyznać się do własnej pomyłki — to szybciej zmienia normy niż jakakolwiek deklaracja.'
+      ],
+      why: 'Tam, gdzie ludzie ukrywają błędy, nie da się zbudować żadnego z pozostałych wymiarów. Zanim zajmiecie się czymkolwiek innym, warto zainwestować właśnie tutaj, bo to fundament pod całą resztę.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie zasadę „błąd omawiamy bez szukania winnego” i konsekwentnie ją stosujcie.',
+        'Niech lider/senior jako pierwszy przyzna się do błędu na forum — to modeluje zachowanie.'
+      ],
+      why: 'Tam, gdzie ludzie boją się mówić o błędach, problemy ujawniają się później i są droższe w naprawie, a zespół traci szansę uczenia się na bieżąco.'
+    }
   },
   tempo: {
-    steps: [
-      'Śledźcie sygnały przeciążenia (nadgodziny, przenoszone zadania) i reagujcie na nie na retro.',
-      'Ustalcie limit pracy w toku (WIP), żeby ograniczyć rozpraszanie i presję.'
-    ],
-    why: 'Chroniczne przeciążenie prowadzi do wypalenia i rotacji w zespole — krótkoterminowe przyspieszenie kosztem tempa zwykle odbija się długoterminową stratą wydajności.'
+    low: {
+      steps: [
+        'Zróbcie jeden tydzień przeglądu: zapiszcie, ile razy ktoś pracował po godzinach albo przenosił zadanie z powodu przeciążenia.',
+        'Otwarcie zgłoście przełożonym, że obecne tempo nie jest do utrzymania — zanim zamieni się to w wypalenie lub odejścia z zespołu.'
+      ],
+      why: 'Chroniczne przeciążenie, które nie jest nazwane na głos, jest traktowane jak „normalność”. Nazwanie problemu to pierwszy krok do tego, żeby ktokolwiek zaczął go traktować poważnie.'
+    },
+    mid: {
+      steps: [
+        'Śledźcie sygnały przeciążenia (nadgodziny, przenoszone zadania) i reagujcie na nie w regularnej rozmowie o sposobie pracy.',
+        'Ustalcie limit pracy w toku (WIP), żeby ograniczyć rozpraszanie i presję.'
+      ],
+      why: 'Chroniczne przeciążenie prowadzi do wypalenia i rotacji w zespole — krótkoterminowe przyspieszenie kosztem tempa zwykle odbija się długoterminową stratą wydajności.'
+    }
+  },
+  jakosc_kodu: {
+    low: {
+      steps: [
+        'Wprowadźcie zasadę, że żadna zmiana nie trafia do głównej gałęzi bez chociaż jednej pary oczu innej niż autor.',
+        'Wybierzcie jeden, najbardziej „toksyczny” fragment kodu, którego nikt nie chce dotykać, i zróbcie na nim pierwszą wspólną refaktoryzację.'
+      ],
+      why: 'Kod, którego boi się dotykać cały zespół, z czasem paraliżuje tempo pracy niezależnie od tego, jak dobrze zespół planuje — to jeden z tych wymiarów, gdzie brak działania systematycznie się mści.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie code review jako standardowy krok przed scaleniem zmiany, nie tylko dla większych funkcji.',
+        'Zarezerwujcie stały czas w sprincie na refaktoryzację najbardziej uciążliwych fragmentów kodu, zamiast czekać na „wielki remont”.'
+      ],
+      why: 'Kod, którego nikt nie odważa się dotknąć, spowalnia każdą kolejną zmianę i zwiększa ryzyko błędów przy najmniejszej modyfikacji. Regularna refaktoryzacja i współdzielona własność kodu to jedna z najlepiej potwierdzonych praktyk XP zmniejszających długoterminowy koszt utrzymania.'
+    }
   },
   deploy_freq: {
-    steps: [
-      'Zmniejszcie wielkość pojedynczego wdrożenia — mniejsze, częstsze zmiany.',
-      'Zautomatyzujcie choć jeden krok procesu wdrożenia, który dziś jest ręczny.'
-    ],
-    why: 'Rzadkie, duże wdrożenia są z natury bardziej ryzykowne niż częste, małe zmiany — im rzadziej wdrażacie, tym więcej się kumuluje w jednym wdrożeniu i tym trudniej znaleźć przyczynę problemu.'
+    low: {
+      steps: [
+        'Znajdźcie jeden, najczęściej robiony typ zmiany i spróbujcie wdrożyć go w mniejszym rozmiarze niż zwykle, żeby zobaczyć różnicę.',
+        'Spiszcie, co dziś blokuje częstsze wdrożenia (proces, ludzie, narzędzia) — zanim zaczniecie automatyzować, warto wiedzieć, co realnie stoi na drodze.'
+      ],
+      why: 'Bardzo rzadkie wdrożenia to zwykle objaw głębszego problemu — strachu przed zmianą, braku automatyzacji, ręcznych kroków. Zanim zajmiecie się częstotliwością wprost, warto zrozumieć, co ją dziś ogranicza.'
+    },
+    mid: {
+      steps: [
+        'Zmniejszcie wielkość pojedynczego wdrożenia — mniejsze, częstsze zmiany.',
+        'Zautomatyzujcie choć jeden krok procesu wdrożenia, który dziś jest ręczny.'
+      ],
+      why: 'Rzadkie, duże wdrożenia są z natury bardziej ryzykowne niż częste, małe zmiany — im rzadziej wdrażacie, tym więcej się kumuluje w jednym wdrożeniu i tym trudniej znaleźć przyczynę problemu.'
+    }
   },
   lead_time: {
-    steps: [
-      'Zmapujcie drogę zmiany od commita do produkcji i znajdźcie największe wąskie gardło.',
-      'Skróćcie czas oczekiwania na code review (np. limit 24h na pierwszą odpowiedź).'
-    ],
-    why: 'Długi czas od commita do produkcji oznacza, że feedback z produkcji wraca późno — błędy i złe założenia są odkrywane, gdy poprawka jest już droższa.'
+    low: {
+      steps: [
+        'Zmierzcie czas dla jednej, ostatniej zmiany — od pierwszego commita do działania na produkcji — żeby mieć punkt odniesienia.',
+        'Zapytajcie zespół, który krok w tej drodze najbardziej ich frustruje — to zwykle najszybszy trop do poprawy.'
+      ],
+      why: 'Bez żadnego pomiaru lead time zwykle wydaje się „jakoś taki, jaki jest”. Dopiero konkretna liczba pokazuje, czy problem tkwi w code review, testach czy samym wdrożeniu.'
+    },
+    mid: {
+      steps: [
+        'Zmapujcie drogę zmiany od commita do produkcji i znajdźcie największe wąskie gardło.',
+        'Skróćcie czas oczekiwania na code review (np. limit 24h na pierwszą odpowiedź).'
+      ],
+      why: 'Długi czas od commita do produkcji oznacza, że feedback z produkcji wraca późno — błędy i złe założenia są odkrywane, gdy poprawka jest już droższa.'
+    }
   },
   change_failure: {
-    steps: [
-      'Wprowadźcie checklistę przed wdrożeniem dla najbardziej ryzykownych zmian.',
-      'Dodajcie testy regresyjne dla obszarów, które najczęściej się psują.'
-    ],
-    why: 'Wysoki odsetek nieudanych wdrożeń podważa zaufanie do procesu wdrożeniowego i skłania zespół do jeszcze rzadszego, bardziej ostrożnego wdrażania — co pogłębia problem zamiast go rozwiązywać.'
+    low: {
+      steps: [
+        'Zacznijcie zapisywać każdy przypadek, gdy wdrożenie wymagało poprawki lub wycofania — nawet w prostym arkuszu.',
+        'Po każdym takim przypadku zadajcie jedno pytanie: co konkretnie wykryłoby to wcześniej?'
+      ],
+      why: 'Bez śledzenia awarii wdrożeniowych zespół polega na wrażeniu („chyba nieźle nam idzie”), a nie na faktach — a to wrażenie bywa złudne, zwłaszcza gdy problemy są szybko gaszone i szybko zapominane.'
+    },
+    mid: {
+      steps: [
+        'Wprowadźcie checklistę przed wdrożeniem dla najbardziej ryzykownych zmian.',
+        'Dodajcie testy regresyjne dla obszarów, które najczęściej się psują.'
+      ],
+      why: 'Wysoki odsetek nieudanych wdrożeń podważa zaufanie do procesu wdrożeniowego i skłania zespół do jeszcze rzadszego, bardziej ostrożnego wdrażania — co pogłębia problem zamiast go rozwiązywać.'
+    }
   },
   mttr: {
-    steps: [
-      'Spiszcie prostą procedurę reagowania na incydent (kto, co, w jakiej kolejności).',
-      'Poćwiczcie scenariusz awarii (game day) choć raz, żeby sprawdzić, gdzie są luki.'
-    ],
-    why: 'Długi czas przywracania usługi bezpośrednio przekłada się na koszt biznesowy awarii — to jeden z wymiarów, gdzie inwestycja zwraca się już przy pierwszym poważniejszym incydencie.'
+    low: {
+      steps: [
+        'Spiszcie, co się dzieje dziś, krok po kroku, gdy coś się psuje — nawet jeśli to chaotyczne, samo spisanie tego już coś pokazuje.',
+        'Ustalcie, kto i jak jest informowany o awarii jako pierwszy — zaskakująco często to ogniwo brakuje.'
+      ],
+      why: 'Zanim zajmiecie się skracaniem czasu naprawy, potrzebujecie wiedzieć, jak dziś naprawdę wygląda reakcja na awarię — często okazuje się, że największym problemem nie jest sama naprawa, tylko czas, zanim ktokolwiek się zorientuje.'
+    },
+    mid: {
+      steps: [
+        'Spiszcie prostą procedurę reagowania na incydent (kto, co, w jakiej kolejności).',
+        'Poćwiczcie scenariusz awarii (game day) choć raz, żeby sprawdzić, gdzie są luki.'
+      ],
+      why: 'Długi czas przywracania usługi bezpośrednio przekłada się na koszt biznesowy awarii — to jeden z wymiarów, gdzie inwestycja zwraca się już przy pierwszym poważniejszym incydencie.'
+    }
   },
   testy_ci: {
-    steps: [
-      'Zacznijcie od automatyzacji testów dla najbardziej krytycznej ścieżki systemu.',
-      'Ustabilizujcie istniejący pipeline CI, zanim dodacie kolejne testy — flaky testy podważają zaufanie.'
-    ],
-    why: 'Bez zaufanych testów automatycznych każda zmiana niesie ukryte ryzyko, a zespół zaczyna kompensować to strachem przed wdrażaniem — co spowalnia wszystko inne.'
+    low: {
+      steps: [
+        'Wybierzcie jedną, najbardziej krytyczną ścieżkę systemu i napiszcie dla niej pierwsze automatyczne testy — nie starajcie się objąć wszystkiego naraz.',
+        'Jeśli macie jakikolwiek pipeline CI, sprawdźcie, czy ktokolwiek ufa jego wynikom — jeśli nie, to sygnał do naprawy zaufania, zanim dodacie więcej testów.'
+      ],
+      why: 'Zaczynanie automatyzacji testów od zera przytłacza, jeśli próbuje się objąć wszystko naraz — jedna dobrze wybrana, krytyczna ścieżka daje szybciej odczuwalną wartość niż rozproszony wysiłek.'
+    },
+    mid: {
+      steps: [
+        'Zacznijcie od automatyzacji testów dla najbardziej krytycznej ścieżki systemu.',
+        'Ustabilizujcie istniejący pipeline CI, zanim dodacie kolejne testy — flaky testy podważają zaufanie.'
+      ],
+      why: 'Bez zaufanych testów automatycznych każda zmiana niesie ukryte ryzyko, a zespół zaczyna kompensować to strachem przed wdrażaniem — co spowalnia wszystko inne.'
+    }
   },
   cicd_trunk: {
-    steps: [
-      'Skróćcie czas życia gałęzi funkcyjnych — cel: poniżej 1–2 dni.',
-      'Wprowadźcie feature flagi, żeby móc integrować niedokończoną pracę bez ryzyka.'
-    ],
-    why: 'Długo żyjące gałęzie kodu to odroczony koszt — im dłużej czekacie z integracją, tym bardziej bolesne i czasochłonne stają się konflikty przy scalaniu.'
+    low: {
+      steps: [
+        'Zmierzcie, jak długo dziś średnio żyje gałąź kodu, zanim zostanie scalona — to da Wam punkt odniesienia.',
+        'Spróbujcie skrócić czas życia jednej, najbliższej gałęzi funkcyjnej o połowę, jako eksperyment.'
+      ],
+      why: 'Bez punktu odniesienia trudno ocenić, czy problem jest poważny — a długo żyjące gałęzie zwykle narastają stopniowo, więc zespół przyzwyczaja się do bólu, zamiast go zauważyć.'
+    },
+    mid: {
+      steps: [
+        'Skróćcie czas życia gałęzi funkcyjnych — cel: poniżej 1–2 dni.',
+        'Wprowadźcie feature flagi, żeby móc integrować niedokończoną pracę bez ryzyka.'
+      ],
+      why: 'Długo żyjące gałęzie kodu to odroczony koszt — im dłużej czekacie z integracją, tym bardziej bolesne i czasochłonne stają się konflikty przy scalaniu.'
+    }
   },
   observability: {
-    steps: [
-      'Dodajcie alerty na 2–3 najważniejsze metryki (dostępność, błędy, czas odpowiedzi).',
-      'Ustalcie jeden dashboard, który zespół sprawdza codziennie, nie tylko w czasie awarii.'
-    ],
-    why: 'Brak wglądu w system oznacza, że o problemach dowiadujecie się od zdenerwowanych użytkowników, a nie z własnych narzędzi — to wydłuża czas reakcji i kosztuje zaufanie klientów.'
+    low: {
+      steps: [
+        'Sprawdźcie, czy macie w ogóle jakikolwiek dashboard czy logi dla najważniejszej części systemu — jeśli nie, zacznijcie od tego minimum.',
+        'Zapytajcie: skąd ostatnio dowiedzieliście się o awarii? Jeśli odpowiedź to „od użytkownika”, to Wasz priorytet numer jeden.'
+      ],
+      why: 'Zespół latający w ciemno nie ma jak reagować szybciej niż użytkownicy. Zanim zajmiecie się zaawansowanymi alertami, potrzebujecie w ogóle podstawowego wglądu w to, co się dzieje.'
+    },
+    mid: {
+      steps: [
+        'Dodajcie alerty na 2–3 najważniejsze metryki (dostępność, błędy, czas odpowiedzi).',
+        'Ustalcie jeden dashboard, który zespół sprawdza codziennie, nie tylko w czasie awarii.'
+      ],
+      why: 'Brak wglądu w system oznacza, że o problemach dowiadujecie się od zdenerwowanych użytkowników, a nie z własnych narzędzi — to wydłuża czas reakcji i kosztuje zaufanie klientów.'
+    }
   },
   iac_dlug: {
-    steps: [
-      'Zacznijcie od zapisania w kodzie konfiguracji jednego, najczęściej zmienianego środowiska.',
-      'Załóżcie widoczny rejestr długu technicznego i przeglądajcie go co sprint lub miesiąc.'
-    ],
-    why: 'Ręcznie konfigurowane środowiska i niewidoczny dług techniczny to źródło niespodzianek — trudnych do odtworzenia awarii i coraz droższych zmian w miarę jak dług narasta.'
+    low: {
+      steps: [
+        'Wybierzcie jedno, najczęściej ręcznie zmieniane środowisko i spiszcie krok po kroku, jak się je dziś konfiguruje — to pierwszy krok do zapisania tego w kodzie.',
+        'Zróbcie jedną, widoczną listę rzeczy, które nazywacie „długiem technicznym” — nawet jeśli nigdy wcześniej nie było takiej listy.'
+      ],
+      why: 'Dopóki dług techniczny i ręczna konfiguracja są tylko czymś, o czym się mówi przy kawie, nie da się nimi świadomie zarządzać — sama widoczność problemu to już krok naprzód.'
+    },
+    mid: {
+      steps: [
+        'Zacznijcie od zapisania w kodzie konfiguracji jednego, najczęściej zmienianego środowiska.',
+        'Załóżcie widoczny rejestr długu technicznego i przeglądajcie go co sprint lub miesiąc.'
+      ],
+      why: 'Ręcznie konfigurowane środowiska i niewidoczny dług techniczny to źródło niespodzianek — trudnych do odtworzenia awarii i coraz droższych zmian w miarę jak dług narasta.'
+    }
   }
 };
 
@@ -903,13 +1091,17 @@ function renderRecommendations(all){
     return;
   }
   el.innerHTML = candidates.map(d => {
-    const r = RECOMMENDATIONS[d.id] || {steps:[], why:''};
+    const tierKey = state[d.id] <= 2 ? 'low' : 'mid';
+    const tierLabel = state[d.id] <= 2 ? 'Punkt startowy' : 'Macie fundament — dociągnijcie';
+    const dimReco = RECOMMENDATIONS[d.id] || {};
+    const r = dimReco[tierKey] || {steps:[], why:''};
     return `
     <div class="reco-card">
       <div class="head">
         <span class="dname">${d.title}</span>
         <span class="dscore">${state[d.id]}/5</span>
       </div>
+      <span class="reco-tier">${tierLabel}</span>
       <ul>${r.steps.map(s => `<li>${s}</li>`).join('')}</ul>
       ${r.why ? `<div class="reco-why">${r.why}</div>` : ''}
     </div>
@@ -998,6 +1190,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
     .reco-card{border:1px solid #ddd;border-radius:6px;padding:10px 14px;margin-bottom:8px;font-family:-apple-system,Segoe UI,sans-serif;}
     .reco-card .head{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:4px;}
     .reco-card ul{margin:0;padding-left:18px;font-size:13.5px;}
+    .reco-tier{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:#B9812E;border:1px solid #B9812E;border-radius:3px;padding:2px 7px;margin-bottom:6px;font-family:-apple-system,Segoe UI,sans-serif;}
     .reco-empty{font-size:13.5px;color:#555;font-family:-apple-system,Segoe UI,sans-serif;}
     @media print{.hint{display:none;}}
   </style></head><body>
