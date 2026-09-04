@@ -137,6 +137,31 @@
     user-select:none;
   }
   .na-toggle input{cursor:pointer;}
+  .comment-toggle{
+    display:block;
+    margin-top:10px;
+    background:none;
+    border:none;
+    padding:0;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--org);
+    cursor:pointer;
+  }
+  .comment-box{
+    display:block;
+    width:100%;
+    min-height:60px;
+    margin-top:8px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:13px;
+    resize:vertical;
+  }
   .card.is-na{opacity:0.55;}
   .card.is-na input[type=range]{cursor:not-allowed;}
   .na-badge{
@@ -1107,6 +1132,8 @@ const state = {};
 const naSet = new Set();
 [...ORG_DIMS, ...TECH_DIMS].forEach(d => state[d.id] = 3);
 
+const comments = {};
+
 function renderCards(dims, containerId, colorClass){
   const el = document.getElementById(containerId);
   el.innerHTML = dims.map(d => `
@@ -1122,6 +1149,8 @@ function renderCards(dims, containerId, colorClass){
         <input type="checkbox" id="na-${d.id}">
         Nie dotyczy naszego zespołu — pomiń przy liczeniu wyniku
       </label>
+      <button type="button" class="comment-toggle" id="comment-toggle-${d.id}">+ Dodaj komentarz</button>
+      <textarea class="comment-box" id="comment-${d.id}" style="display:none;" placeholder="Komentarz do tej odpowiedzi — dlaczego taka ocena, co warto dopisać..."></textarea>
     </div>
   `).join('');
 
@@ -1147,6 +1176,18 @@ function renderCards(dims, containerId, colorClass){
         card.classList.remove('is-na');
       }
       update();
+    });
+
+    const commentToggle = document.getElementById(`comment-toggle-${d.id}`);
+    const commentBox = document.getElementById(`comment-${d.id}`);
+    commentToggle.addEventListener('click', () => {
+      const isHidden = commentBox.style.display === 'none';
+      commentBox.style.display = isHidden ? 'block' : 'none';
+      commentToggle.textContent = isHidden ? '− Ukryj komentarz' : '+ Dodaj komentarz';
+      if(isHidden) commentBox.focus();
+    });
+    commentBox.addEventListener('input', (e) => {
+      comments[d.id] = e.target.value;
     });
   });
 }
@@ -1356,6 +1397,15 @@ document.getElementById('printBtn').addEventListener('click', () => {
       }).join('')
     : '<li>Brak dodanych działań.</li>';
 
+  const allDimsForExport = [...ORG_DIMS, ...TECH_DIMS];
+  const commentEntries = allDimsForExport
+    .filter(d => comments[d.id] && comments[d.id].trim())
+    .map(d => {
+      const scoreLabel = naSet.has(d.id) ? 'nie dotyczy' : `${state[d.id]}/5`;
+      return `<li><strong>${d.title}</strong> (${scoreLabel}): ${comments[d.id].trim().replace(/\n/g,'<br>')}</li>`;
+    });
+  const commentsHTML = commentEntries.length ? commentEntries.join('') : '';
+
   const html = `<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Poziomy zespołu — wynik</title>
   <style>
     body{font-family: Georgia, "Iowan Old Style", serif; color:#17222E; padding:40px; max-width:800px; margin:0 auto;}
@@ -1395,6 +1445,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
   <h2>Do poprawy w pierwszej kolejności</h2><p>${weakest}</p>
   <h2>Zalecane kolejne kroki</h2>${recoHTML}
   <h2>Notatki</h2><p>${notesVal ? notesVal.replace(/\n/g,'<br>') : 'Brak notatek.'}</p>
+  ${commentsHTML ? `<h2>Komentarze przy pytaniach</h2><ul>${commentsHTML}</ul>` : ''}
   <h2>Działania</h2><ul>${actionsHTML}</ul>
   </body></html>`;
 
