@@ -595,147 +595,147 @@
 <script>
 const ORG_DIMS = [
   {id:'planowanie', title:'Podział i planowanie pracy', help:"Chodzi o to, czy praca jest dzielona na małe, zarządzalne kawałki i planowana w krótkich, przewidywalnych cyklach — niezależnie, czy nazywacie to sprintem, iteracją czy po prostu tygodniowym planem. W środowisku, gdzie zespół zależy od roadmapy kilku innych zespołów naraz, krótki cykl bywa trudniejszy do utrzymania niż w izolowanym zespole — to też warto uwzględnić w ocenie.", levels:[
-    'Zadania trafiają do zespołu bez podziału na mniejsze części ani planu na iterację.',
-    'Zespół dzieli pracę doraźnie, plany często rozjeżdżają się z rzeczywistością.',
-    'Zespół planuje pracę w krótkich cyklach, ale trafność planu bywa różna.',
-    'Zespół dzieli pracę na małe przyrosty i zwykle dowozi to, co zaplanował.',
-    'Zespół samodzielnie planuje krótkoterminowo z wysoką trafnością i elastycznie reaguje na zmiany.'
+    'Zadania trafiają do nas bez podziału na mniejsze części ani planu na iterację.',
+    'Dzielimy pracę doraźnie, plany często rozjeżdżają się z rzeczywistością.',
+    'Planujemy pracę w krótkich cyklach, ale trafność planu bywa różna.',
+    'Dzielimy pracę na małe przyrosty i zwykle dowozimy to, co zaplanowaliśmy.',
+    'Samodzielnie planujemy krótkoterminowo z wysoką trafnością i elastycznie reagujemy na zmiany.'
   ]},
   {id:'priorytety', title:'Zarządzanie priorytetami i backlogiem', help:"Backlog to lista rzeczy do zrobienia. Pytanie dotyczy tego, czy ma jasną, uzgodnioną kolejność ważności, rozumianą przez cały zespół, a nie tylko przez jedną osobę. W organizacjach z wieloma interesariuszami o sprzecznych priorytetach to bywa trudniejsze niż w małym, izolowanym zespole — sama trudność nie znaczy, że robicie coś źle.", levels:[
-    'Wszystko jest „pilne”, priorytety zmieniają się z dnia na dzień bez uzasadnienia.',
-    'Priorytety istnieją, ale nie są spójnie rozumiane w zespole.',
-    'Backlog jest uporządkowany, priorytety znane, choć rzadko rewidowane.',
-    'Priorytety oparte o jasne kryteria (wartość, ryzyko), backlog aktualny i czytelny.',
-    'Zespół współtworzy priorytety, rozumie kontekst biznesowy i potrafi je uzasadnić.'
+    'Wszystko jest u nas „pilne”, priorytety zmieniają się z dnia na dzień bez uzasadnienia.',
+    'Mamy priorytety, ale nie rozumiemy ich spójnie jako zespół.',
+    'Mamy uporządkowany backlog i znamy priorytety, choć rzadko je rewidujemy.',
+    'Opieramy priorytety o jasne kryteria (wartość, ryzyko), backlog mamy aktualny i czytelny.',
+    'Współtworzymy priorytety, rozumiemy kontekst biznesowy i potrafimy je uzasadnić.'
   ]},
   {id:'gotowosc', title:'Definicja gotowości i ukończenia', help:"DoR („Definition of Ready”) to uzgodnione minimum, kiedy zadanie nadaje się do rozpoczęcia. DoD („Definition of Done”) to kryteria, kiedy jest naprawdę skończone. To nie oznacza czekania, aż wszystko będzie jasne — w zwinnym, zmiennym środowisku często trzeba zacząć, zanim wszystko jest domknięte. Chodzi o świadome nazwanie, co jeszcze jest niewiadomą, a nie o wyeliminowanie każdej niepewności przed startem.", levels:[
-    'Brak wspólnego rozumienia, kiedy zadanie jest „gotowe do startu” lub „zrobione”.',
-    'Definicje istnieją, ale są ignorowane pod presją czasu.',
-    'Zespół zna definicje i zwykle ich przestrzega.',
-    'Zespół ma jasne minimum do rozpoczęcia pracy i świadomie nazywa niewiadome, które zostają do wyjaśnienia w trakcie.',
-    'Minimum gotowości jest dopasowywane do kontekstu — zespół celowo decyduje, kiedy zacząć mimo niepewności, i świadomie zarządza wynikającym z tego ryzykiem.'
+    'Nie mamy wspólnego rozumienia, kiedy zadanie jest „gotowe do startu” lub „zrobione”.',
+    'Mamy definicje, ale ignorujemy je pod presją czasu.',
+    'Znamy definicje i zwykle ich przestrzegamy.',
+    'Mamy jasne minimum do rozpoczęcia pracy i świadomie nazywamy niewiadome, które zostają do wyjaśnienia w trakcie.',
+    'Minimum gotowości dopasowujemy do kontekstu — celowo decydujemy, kiedy zacząć mimo niepewności, i świadomie zarządzamy wynikającym z tego ryzykiem.'
   ]},
   {id:'wspolpraca', title:'Współpraca i rozproszenie wiedzy', help:"Bus factor to liczba osób, których nagła nieobecność (np. odejście z firmy) zatrzymałaby pracę zespołu. Im niższy, tym większe ryzyko. W większych, rozproszonych systemach ryzyko rzadko jest tak proste jak „jedna osoba zna cały moduł” — częściej chodzi o to, że nikt nie rozumie całości interakcji między usługami, za które odpowiada kilka zespołów naraz.", levels:[
-    'Silosy kompetencyjne — pojedyncze osoby są „jedynym punktem awarii” (bus factor 1).',
-    'Sporadyczna wymiana wiedzy, głównie przy okazji problemów.',
-    'Zespół świadomie stara się dzielić wiedzą, ale nie jest to systemowe.',
-    'Regularne parowanie / przeglądy, wiedza rozproszona na kilka osób.',
-    'Każdy element systemu może przejąć więcej niż jedna osoba, wiedza swobodnie krąży.'
+    'Mamy silosy kompetencyjne — pojedyncze osoby są „jedynym punktem awarii” (bus factor 1).',
+    'Wymieniamy się wiedzą sporadycznie, głównie przy okazji problemów.',
+    'Świadomie staramy się dzielić wiedzą, ale nie robimy tego systemowo.',
+    'Regularnie parujemy i robimy przeglądy, wiedza jest rozproszona na kilka osób.',
+    'Każdy element systemu może u nas przejąć więcej niż jedna osoba, wiedza swobodnie krąży.'
   ]},
   {id:'retro', title:'Regularna refleksja i wdrażanie usprawnień', help:"Nie chodzi o konkretną nazwę spotkania (np. retrospektywę) — liczy się regularny, świadomy moment przyjrzenia się temu, JAK zespół pracuje, niezależnie od formy, i to, czy coś z tego faktycznie się zmienia.", levels:[
-    'Zespół nie ma żadnego regularnego momentu na refleksję nad sposobem pracy — ani nic z tego nie wynika.',
-    'Taka refleksja się zdarza, ale wnioski rzadko są wdrażane.',
-    'Część wniosków z takich rozmów jest wdrażana, efekty bywają widoczne.',
-    'Regularne rozmowy o sposobie pracy kończą się konkretnymi działaniami, które są dowożone.',
-    'Ciągłe doskonalenie jest nawykiem zespołu niezależnie od formy — efekty usprawnień są mierzone.'
+    'Nie mamy żadnego regularnego momentu na refleksję nad sposobem pracy — i nic z tego nie wynika.',
+    'Taka refleksja się u nas zdarza, ale wnioski rzadko wdrażamy.',
+    'Część wniosków z takich rozmów wdrażamy, efekty bywają widoczne.',
+    'Regularne rozmowy o sposobie pracy kończymy konkretnymi działaniami, które dowozimy.',
+    'Ciągłe doskonalenie jest naszym nawykiem niezależnie od formy — mierzymy efekty usprawnień.'
   ]},
   {id:'autonomia', title:'Autonomia i odpowiedzialność', help:"Chodzi o to, ile decyzji — technicznych i procesowych — zespół może podjąć samodzielnie, bez czekania na akceptację z zewnątrz, i czy bierze odpowiedzialność za efekt tych decyzji.", levels:[
-    'Zespół czeka na polecenia, brak poczucia właścicielstwa nad wynikiem.',
-    'Zespół wykonuje decyzje podjęte gdzie indziej, rzadko je kwestionuje.',
-    'Zespół podejmuje część decyzji technicznych samodzielnie.',
-    'Zespół samodzielnie podejmuje większość decyzji procesowych i technicznych.',
-    'Zespół w pełni bierze odpowiedzialność za rezultat i aktywnie kształtuje sposób pracy.'
+    'Czekamy na polecenia, nie czujemy się właścicielami wyniku.',
+    'Wykonujemy decyzje podjęte gdzie indziej, rzadko je kwestionujemy.',
+    'Część decyzji technicznych podejmujemy samodzielnie.',
+    'Samodzielnie podejmujemy większość decyzji procesowych i technicznych.',
+    'W pełni bierzemy odpowiedzialność za rezultat i aktywnie kształtujemy sposób pracy.'
   ]},
   {id:'zaleznosci', title:'Zarządzanie zależnościami i ryzykiem', help:"Zależność to sytuacja, w której wykonanie Waszej pracy wymaga czegoś od innego zespołu, systemu lub osoby. W organizacji z wieloma zespołami na współdzielonej platformie zależności bywają wielopoziomowe i trudne do przewidzenia — to normalne, pytanie dotyczy tego, jak szybko je zauważacie, nie czy w ogóle występują.", levels:[
-    'Zależności ujawniają się w ostatniej chwili i powodują poślizgi.',
-    'Zależności są znane, ale zarządzane reaktywnie.',
-    'Zespół identyfikuje zależności z wyprzedzeniem, komunikacja bywa niespójna.',
-    'Zależności i ryzyka są aktywnie śledzone i komunikowane innym zespołom.',
-    'Zespół proaktywnie zarządza zależnościami, ryzyka są adresowane zanim staną się problemem.'
+    'Zależności ujawniają się nam w ostatniej chwili i powodują poślizgi.',
+    'Znamy zależności, ale zarządzamy nimi reaktywnie.',
+    'Identyfikujemy zależności z wyprzedzeniem, ale komunikacja bywa niespójna.',
+    'Aktywnie śledzimy zależności i ryzyka oraz komunikujemy je innym zespołom.',
+    'Proaktywnie zarządzamy zależnościami, adresujemy ryzyka, zanim staną się problemem.'
   ]},
   {id:'bezp_psych', title:'Bezpieczeństwo psychologiczne', help:"Bezpieczeństwo psychologiczne to poczucie, że można przyznać się do błędu, zadać „głupie” pytanie albo skrytykować pomysł bez obawy o negatywne konsekwencje społeczne czy zawodowe.", levels:[
-    'Ludzie ukrywają błędy i problemy, bo boją się konsekwencji.',
-    'Błędy są ujawniane, ale niechętnie, zwykle dopiero gdy nie da się ich ukryć.',
-    'Zespół zwykle mówi otwarcie o problemach, choć nie zawsze od razu.',
-    'Ludzie swobodnie przyznają się do błędów i proszą o pomoc, bez obawy o ocenę.',
-    'Kwestionowanie decyzji i przyznawanie się do niewiedzy jest normą, traktowane jako wartość, nie ryzyko.'
+    'Ukrywamy błędy i problemy, bo boimy się konsekwencji.',
+    'Ujawniamy błędy niechętnie, zwykle dopiero gdy nie da się ich ukryć.',
+    'Zwykle mówimy otwarcie o problemach, choć nie zawsze od razu.',
+    'Swobodnie przyznajemy się do błędów i prosimy o pomoc, bez obawy o ocenę.',
+    'Kwestionowanie decyzji i przyznawanie się do niewiedzy jest u nas normą — traktujemy to jako wartość, nie ryzyko.'
   ]},
   {id:'tempo', title:'Zrównoważone tempo', help:"Zrównoważone tempo to zasada z Extreme Programming (XP) mówiąca, że zespół powinien pracować w tempie, które da się utrzymać w długim okresie — bez chronicznych nadgodzin i wypalenia.", levels:[
-    'Praca w nadgodzinach i pod presją jest normą, zespół jest chronicznie przeciążony.',
-    'Przeciążenie zdarza się często, zwykle przy większych deadline’ach.',
-    'Tempo bywa nierówne, ale zespół zwykle wraca do normy po intensywnych okresach.',
-    'Tempo jest w większości stabilne i możliwe do utrzymania w długim okresie.',
-    'Zespół pracuje w stałym, zrównoważonym tempie — przeciążenie to wyjątek i szybko adresowany sygnał.'
+    'Praca w nadgodzinach i pod presją jest u nas normą, jesteśmy chronicznie przeciążeni.',
+    'Przeciążamy się często, zwykle przy większych deadline’ach.',
+    'Nasze tempo bywa nierówne, ale zwykle wracamy do normy po intensywnych okresach.',
+    'Nasze tempo jest w większości stabilne i możliwe do utrzymania w długim okresie.',
+    'Pracujemy w stałym, zrównoważonym tempie — przeciążenie to u nas wyjątek i szybko adresowany sygnał.'
   ]},
   {id:'jakosc_kodu', title:'Jakość inżynierska kodu i wspólna własność', help:"Chodzi o codzienne praktyki inżynierskie z Extreme Programming: refaktoryzację (poprawianie struktury kodu bez zmiany jego zachowania), collective code ownership (każdy może zmieniać każdy fragment kodu, nie tylko jego autor) i dbanie o prostotę rozwiązań, a nie tylko o to, żeby „działało”.", levels:[
-    'Kod pisany w pojedynkę, bez przeglądów — nikt nie odważa się go refaktoryzować z obawy przed zepsuciem.',
-    'Sporadyczne przeglądy kodu, refaktoryzacja odkładana „na później”, które nigdy nie nadchodzi.',
-    'Code review jest normą, refaktoryzacja zdarza się przy okazji, ale nie jest systematyczna.',
-    'Zespół regularnie refaktoryzuje i dba o prostotę rozwiązań — kod jest „wspólny”, każdy może go zmieniać.',
-    'Prostota i czytelność kodu to nawyk, nie wysiłek. Parowanie lub mob programming i wspólna własność kodu są normą, jakość rośnie z czasem zamiast spadać.'
+    'Piszemy kod w pojedynkę, bez przeglądów — nikt nie odważa się go refaktoryzować z obawy przed zepsuciem.',
+    'Sporadycznie przeglądamy kod, refaktoryzację odkładamy „na później”, która nigdy nie nadchodzi.',
+    'Code review jest u nas normą, refaktoryzację robimy przy okazji, ale niesystematycznie.',
+    'Regularnie refaktoryzujemy i dbamy o prostotę rozwiązań — kod jest „wspólny”, każdy może go zmieniać.',
+    'Prostota i czytelność kodu to nasz nawyk, nie wysiłek. Parowanie lub mob programming i wspólna własność kodu są normą, jakość rośnie z czasem zamiast spadać.'
   ]},
   {id:'feedback_biznes', title:'Pętla zwrotna z użytkownikiem i biznesem', help:"Chodzi o to, czy zespół wie, że to, co dostarcza, faktycznie działa dla użytkownika i tworzy wartość biznesową, a nie tylko czy zadanie formalnie zostało zamknięte. Wysoka dojrzałość procesowa i techniczna nie gwarantuje, że budujecie właściwe rzeczy — to osobny wymiar.", levels:[
-    'Zespół dowiaduje się, czy coś działa, głównie z reklamacji lub przypadkowych sygnałów — nikt systematycznie tego nie sprawdza.',
-    'Czasem ktoś sprawdza wyniki po wdrożeniu, ale zależy to od inicjatywy pojedynczej osoby, nie od ustalonej praktyki.',
-    'Zespół ma dostęp do podstawowych danych o użyciu funkcji, ale rzadko wraca do nich po zakończeniu pracy.',
-    'Zespół regularnie sprawdza, czy dostarczone rozwiązania osiągają zakładany efekt, i wykorzystuje to przy planowaniu kolejnych prac.',
-    'Weryfikacja wpływu jest wbudowana w sposób pracy — zespół definiuje miarę sukcesu przed startem zadania i świadomie z niej korzysta do podejmowania decyzji.'
+    'Dowiadujemy się, czy coś działa, głównie z reklamacji lub przypadkowych sygnałów — nikt u nas systematycznie tego nie sprawdza.',
+    'Czasem ktoś u nas sprawdza wyniki po wdrożeniu, ale zależy to od inicjatywy pojedynczej osoby, nie od ustalonej praktyki.',
+    'Mamy dostęp do podstawowych danych o użyciu funkcji, ale rzadko wracamy do nich po zakończeniu pracy.',
+    'Regularnie sprawdzamy, czy dostarczone rozwiązania osiągają zakładany efekt, i wykorzystujemy to przy planowaniu kolejnych prac.',
+    'Weryfikacja wpływu jest wbudowana w nasz sposób pracy — definiujemy miarę sukcesu przed startem zadania i świadomie z niej korzystamy do podejmowania decyzji.'
   ]}
 ];
 
 const TECH_DIMS = [
   {id:'deploy_freq', title:'Częstotliwość wdrożeń', help:"Deployment Frequency (częstotliwość wdrożeń) — jak często zmiany trafiają na produkcję. Jedna z czterech kluczowych metryk DORA. Uwaga: wysoka częstotliwość nie jest uniwersalnym celem — w środowiskach z twardymi oknami wdrożeniowymi (regulacje, certyfikacja sprzętu, integracje z systemami o ograniczonej dostępności) rzadsze, większe wdrożenia bywają świadomym, racjonalnym wyborem, nie zaniedbaniem.", levels:[
-    'Rzadziej niż raz w miesiącu, wdrożenia są duże i ryzykowne.',
-    'Raz na miesiąc do kilku tygodni.',
-    'Co tydzień lub kilka razy w tygodniu.',
-    'Codziennie, zmiany są małe i przewidywalne.',
-    'Wielokrotnie dziennie, na żądanie — tam, gdzie kontekst na to pozwala.'
+    'Wdrażamy rzadziej niż raz w miesiącu, nasze wdrożenia są duże i ryzykowne.',
+    'Wdrażamy raz na miesiąc do kilku tygodni.',
+    'Wdrażamy co tydzień lub kilka razy w tygodniu.',
+    'Wdrażamy codziennie, nasze zmiany są małe i przewidywalne.',
+    'Wdrażamy wielokrotnie dziennie, na żądanie — tam, gdzie nasz kontekst na to pozwala.'
   ]},
   {id:'lead_time', title:'Czas realizacji zmiany (lead time)', help:"Lead Time for Changes — czas od momentu, gdy zmiana w kodzie jest gotowa, do chwili, gdy działa na produkcji. Druga z metryk DORA. W systemach złożonych z wielu usług lead time bywa sumą czasów oczekiwania na kilka zespołów naraz — mierzenie tylko swojego fragmentu może dawać złudny obraz całości.", levels:[
-    'Od commita do produkcji mijają tygodnie lub miesiące.',
-    'Kilka dni do tygodnia.',
-    'Poniżej doby.',
-    'Kilka godzin.',
-    'Poniżej godziny — zmiana trafia na produkcję niemal natychmiast po zatwierdzeniu.'
+    'U nas od commita do produkcji mijają tygodnie lub miesiące.',
+    'U nas to kilka dni do tygodnia.',
+    'U nas to poniżej doby.',
+    'U nas to kilka godzin.',
+    'U nas to poniżej godziny — zmiana trafia na produkcję niemal natychmiast po zatwierdzeniu.'
   ]},
   {id:'change_failure', title:'Wskaźnik nieudanych zmian', help:"Change Failure Rate — jaki procent wdrożeń powoduje awarię, degradację usługi lub wymaga poprawki. Trzecia metryka DORA. Uwaga: dążenie do zera za wszelką cenę bywa sygnałem nadmiernej ostrożności, która spowalnia wszystko inne — chodzi o rozsądny balans, nie o perfekcję.", levels:[
-    'Duża część wdrożeń wymaga hotfixa lub rollbacku.',
-    'Problemy po wdrożeniu zdarzają się często i są kosztowne.',
-    'Część wdrożeń wymaga poprawek, ale są one szybko wykrywane.',
-    'Rzadkie problemy po wdrożeniu, wykrywane niemal natychmiast.',
-    'Nieudane wdrożenia to rzadkość, wykrywane automatycznie, zanim wpłyną na użytkowników.'
+    'Duża część naszych wdrożeń wymaga hotfixa lub rollbacku.',
+    'Problemy po naszych wdrożeniach zdarzają się często i są kosztowne.',
+    'Część naszych wdrożeń wymaga poprawek, ale szybko je wykrywamy.',
+    'Rzadko mamy problemy po wdrożeniu, a jeśli już, wykrywamy je niemal natychmiast.',
+    'Nieudane wdrożenia to u nas rzadkość — wykrywamy je automatycznie, zanim wpłyną na użytkowników.'
   ]},
   {id:'mttr', title:'Czas przywrócenia usługi (MTTR)', help:"MTTR (Mean Time To Restore/Recovery) — jak szybko zespół przywraca działanie usługi po awarii. Czwarta metryka DORA. W systemach rozproszonych czas przywrócenia bywa trudny do zmierzenia jednoznacznie, bo różne komponenty mogą się psuć i wracać niezależnie — traktujcie to jako przybliżenie, nie precyzyjny wskaźnik.", levels:[
-    'Przywrócenie usługi po awarii trwa dni.',
-    'Przywrócenie trwa od kilkunastu godzin do doby.',
-    'Przywrócenie trwa kilka godzin.',
-    'Przywrócenie trwa poniżej godziny.',
-    'Przywrócenie trwa minuty, dzięki gotowym procedurom i automatyzacji.'
+    'Przywrócenie usługi po awarii zajmuje nam dni.',
+    'Przywrócenie zajmuje nam od kilkunastu godzin do doby.',
+    'Przywrócenie zajmuje nam kilka godzin.',
+    'Przywrócenie zajmuje nam poniżej godziny.',
+    'Przywrócenie zajmuje nam minuty, dzięki gotowym procedurom i automatyzacji.'
   ]},
   {id:'testy_ci', title:'Automatyzacja testów i CI', help:"CI (Continuous Integration) to praktyka częstego łączenia zmian w kodzie z automatycznym uruchamianiem testów. Ten wymiar pyta, jak bardzo zespół polega na automatycznych testach zamiast ręcznego sprawdzania. W kodzie odziedziczonym bez testów od lat „zacznijcie pisać testy” bywa łatwiejsze do powiedzenia niż zrobienia — to nie czyni tego mniej wartym zrobienia, tylko dłuższym procesem.", levels:[
-    'Testy są głównie manualne, CI nie istnieje albo pipeline jest niestabilny.',
-    'Podstawowe testy automatyczne, pipeline działa, ale bywa zawodny.',
-    'Solidny zestaw testów automatycznych uruchamiany na commit, pipeline jest zaufany.',
-    'Wysokie pokrycie testami różnych poziomów, szybki i stabilny pipeline.',
-    'Testy automatyczne są pełnym źródłem zaufania do jakości, zespół wdraża bez obaw.'
+    'Testujemy głównie manualnie, nie mamy CI albo nasz pipeline jest niestabilny.',
+    'Mamy podstawowe testy automatyczne, nasz pipeline działa, ale bywa zawodny.',
+    'Mamy solidny zestaw testów automatycznych uruchamiany na commit, ufamy naszemu pipeline’owi.',
+    'Mamy wysokie pokrycie testami różnych poziomów, nasz pipeline jest szybki i stabilny.',
+    'Testy automatyczne są dla nas pełnym źródłem zaufania do jakości — wdrażamy bez obaw.'
   ]},
   {id:'cicd_trunk', title:'Integracja i dostarczanie kodu (CI/CD, krótkie gałęzie)', help:"CD to automatyzacja drogi od zatwierdzonej zmiany do produkcji. Trunk-based development to praca na krótko żyjących gałęziach, często integrowanych. W środowisku z wieloma zespołami na współdzielonym repozytorium albo z zależnościami między wieloma usługami częsta integracja bywa trudniejsza do skoordynowania niż w pojedynczym repozytorium — to nie znaczy, że jest mniej warta, tylko że wymaga innej infrastruktury (feature flagi, testy kontraktowe).", levels:[
-    'Długo żyjące gałęzie, rzadkie i bolesne scalenia.',
-    'Gałęzie żyją kilka dni do tygodnia, scalenia bywają problematyczne.',
-    'Krótkie gałęzie, częsta integracja z główną linią kodu.',
-    'Niemal trunk-based development, automatyczna ścieżka do wdrożenia po zatwierdzeniu.',
-    'Pełny trunk-based development — każda zmiana automatycznie przechodzi przez pipeline do produkcji.'
+    'Mamy długo żyjące gałęzie, nasze scalenia są rzadkie i bolesne.',
+    'Nasze gałęzie żyją kilka dni do tygodnia, scalenia bywają problematyczne.',
+    'Mamy krótkie gałęzie, często integrujemy z główną linią kodu.',
+    'Pracujemy niemal w trunk-based development, mamy automatyczną ścieżkę do wdrożenia po zatwierdzeniu.',
+    'Pracujemy w pełnym trunk-based development — każda nasza zmiana automatycznie przechodzi przez pipeline do produkcji.'
   ]},
   {id:'observability', title:'Observability i monitoring', help:"Observability to zdolność systemu do pokazywania, co się w nim dzieje — przez logi, metryki i tracing. W systemie złożonym z wielu usług sam wgląd w pojedynczy serwis nie wystarczy — trzeba widzieć, jak żądanie przechodzi przez cały łańcuch (distributed tracing), inaczej alerty pokazują objawy, nie przyczyny.", levels:[
-    'O problemach zespół dowiaduje się od użytkowników.',
-    'Podstawowe logi/metryki istnieją, ale nikt regularnie ich nie sprawdza.',
-    'Zespół ma dashboardy i alerty na kluczowe metryki.',
-    'Pełny wgląd w system (logi, metryki, tracing), alerty są wiarygodne.',
-    'Problemy są wykrywane i często naprawiane, zanim zauważy je użytkownik.'
+    'O problemach dowiadujemy się od użytkowników.',
+    'Mamy podstawowe logi i metryki, ale nikt regularnie ich nie sprawdza.',
+    'Mamy dashboardy i alerty na kluczowe metryki.',
+    'Mamy pełny wgląd w system (logi, metryki, tracing), nasze alerty są wiarygodne.',
+    'Wykrywamy i często naprawiamy problemy, zanim zauważy je użytkownik.'
   ]},
   {id:'iac_dlug', title:'Infrastruktura jako kod i dług techniczny', help:"IaC (Infrastructure as Code) to zarządzanie infrastrukturą przez kod, a nie ręczną konfigurację. Dług techniczny to świadomie lub nieświadomie odłożone decyzje — sam dług nie jest problemem, problemem jest dług niewidoczny i niekontrolowany. Zespół, który świadomie zaciąga dług, żeby dowieźć coś na czas, i wie dokładnie co i dlaczego odłożył, jest w zupełnie innej sytuacji niż zespół, który nie wie, ile długu ma.", levels:[
-    'Środowiska konfigurowane ręcznie, dług techniczny narasta bez śledzenia — nikt nie wie, ile go faktycznie jest.',
-    'Częściowa automatyzacja infrastruktury, dług techniczny jest wspominany ustnie, ale nigdzie nie zapisany.',
-    'Infrastruktura w dużej części jako kod, dług techniczny jest widoczny w backlogu, ale rzadko świadomie priorytetyzowany.',
-    'Infrastruktura w pełni wersjonowana i powtarzalna. Dług techniczny jest zaciągany świadomie, z jasnym uzasadnieniem, i regularnie spłacany.',
-    'Środowiska odtwarzalne jednym kliknięciem. Zespół traktuje dług techniczny jako narzędzie strategiczne — świadomie decyduje, kiedy go zaciągnąć, a kiedy spłacić, na podstawie realnego kosztu.'
+    'Konfigurujemy środowiska ręcznie, nasz dług techniczny narasta bez śledzenia — nikt nie wie, ile go faktycznie mamy.',
+    'Częściowo automatyzujemy infrastrukturę, o długu technicznym wspominamy ustnie, ale nigdzie go nie zapisujemy.',
+    'Mamy infrastrukturę w dużej części jako kod, nasz dług techniczny jest widoczny w backlogu, ale rzadko świadomie go priorytetyzujemy.',
+    'Nasza infrastruktura jest w pełni wersjonowana i powtarzalna. Dług techniczny zaciągamy świadomie, z jasnym uzasadnieniem, i regularnie go spłacamy.',
+    'Nasze środowiska są odtwarzalne jednym kliknięciem. Traktujemy dług techniczny jako narzędzie strategiczne — świadomie decydujemy, kiedy go zaciągnąć, a kiedy spłacić, na podstawie realnego kosztu.'
   ]},
   {id:'security', title:'Bezpieczeństwo (DevSecOps)', help:"Bezpieczeństwo jako część codziennego procesu wytwarzania, nie jednorazowy audyt raz w roku. Obejmuje m.in. zarządzanie sekretami (hasła, klucze API), skanowanie zależności pod kątem znanych podatności i traktowanie znalezionych luk jak zwykłych błędów do naprawy, a nie osobnej kategorii pracy.", levels:[
-    'Sekrety bywają trzymane wprost w kodzie lub plikach konfiguracyjnych, nikt nie skanuje zależności pod kątem podatności.',
-    'Podstawowe zasady bezpieczeństwa są znane, ale stosowane niekonsekwentnie i zależnie od osoby.',
-    'Zależności są skanowane, sekrety trzymane w dedykowanym miejscu, ale reagowanie na znalezione problemy bywa opóźnione.',
-    'Skanowanie bezpieczeństwa jest częścią pipeline’u, a znalezione podatności trafiają do backlogu z jasnym priorytetem.',
-    'Bezpieczeństwo jest wbudowane w codzienny proces na równi z jakością kodu — zespół samodzielnie identyfikuje i naprawia większość problemów, zanim staną się incydentem.'
+    'Trzymamy sekrety wprost w kodzie lub plikach konfiguracyjnych, nikt u nas nie skanuje zależności pod kątem podatności.',
+    'Znamy podstawowe zasady bezpieczeństwa, ale stosujemy je niekonsekwentnie i zależnie od osoby.',
+    'Skanujemy zależności, sekrety trzymamy w dedykowanym miejscu, ale reagujemy na znalezione problemy z opóźnieniem.',
+    'Skanowanie bezpieczeństwa jest częścią naszego pipeline’u, a znalezione podatności trafiają do backlogu z jasnym priorytetem.',
+    'Bezpieczeństwo jest wbudowane w nasz codzienny proces na równi z jakością kodu — samodzielnie identyfikujemy i naprawiamy większość problemów, zanim staną się incydentem.'
   ]}
 ];
 
