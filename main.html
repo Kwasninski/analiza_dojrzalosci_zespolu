@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kompas dojrzałości zespołu</title>
+<title>Poziomy zespołu</title>
 <style>
   :root{
     --ink:#17222E;
@@ -180,6 +180,7 @@
   .radar-block .rlabel .avg{
     font-family: Georgia, serif;
     font-size:20px;
+    color:var(--ink);
   }
   .org-label{color:var(--org);}
   .tech-label{color:var(--tech);}
@@ -476,7 +477,7 @@
     color:#9FC3C1;
     line-height:1.5;
   }
-  .reco-card .reco-blocked strong{color:var(--tech);}
+  .reco-card .reco-blocked strong{color:var(--tech-soft);}
   .reco-empty{font-size:13.5px;color:#9FAAB5;}
 </style>
 </head>
@@ -484,7 +485,7 @@
 <div class="wrap">
 
   <div class="eyebrow">Narzędzie samoobsługowe · bez moderatora</div>
-  <h1>Kompas dojrzałości zespołu</h1>
+  <h1>Poziomy zespołu</h1>
   <p class="lede">Wspólna ocena tego, jak dojrzale i sprawnie zespół planuje, organizuje pracę oraz jak wygląda jego droga od kodu do produkcji. Bez odniesienia do konkretnego frameworka — chodzi o to, co faktycznie działa.</p>
 
   <div class="team-field">
@@ -493,7 +494,7 @@
   </div>
 
   <div class="note">
-    <strong>Zanim zaczniecie:</strong> to narzędzie zostaje z Wami na dłużej. Nie potrzebujecie mnie, żeby z niego korzystać — usiądźcie razem, przejdźcie przez pytania, podyskutujcie tam, gdzie oceny się różnią, i wybierzcie 1–2 rzeczy do poprawy na najbliższy kwartał. Wracajcie do kompasu regularnie i patrzcie, jak przesuwa się mapa.
+    <strong>Zanim zaczniecie:</strong> to narzędzie zostaje z Wami na dłużej. Nie potrzebujecie mnie, żeby z niego korzystać — usiądźcie razem, przejdźcie przez pytania, podyskutujcie tam, gdzie oceny się różnią, i wybierzcie 1–2 rzeczy do poprawy na najbliższy kwartał. Wracajcie do niego regularnie i patrzcie, jak zmienia się obraz.
   </div>
 
   <details class="howto">
@@ -1355,7 +1356,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
       }).join('')
     : '<li>Brak dodanych działań.</li>';
 
-  const html = `<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Kompas dojrzałości zespołu — wynik</title>
+  const html = `<!DOCTYPE html><html lang="pl"><head><meta charset="UTF-8"><title>Poziomy zespołu — wynik</title>
   <style>
     body{font-family: Georgia, "Iowan Old Style", serif; color:#17222E; padding:40px; max-width:800px; margin:0 auto;}
     h1{font-size:28px;margin-bottom:4px;} h2{font-size:16px;margin-top:30px;font-family:-apple-system,Segoe UI,sans-serif;text-transform:uppercase;letter-spacing:.04em;color:#3C4A59;}
@@ -1383,7 +1384,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
     .reco-empty{font-size:13.5px;color:#555;font-family:-apple-system,Segoe UI,sans-serif;}
     @media print{.hint{display:none;}}
   </style></head><body>
-  <h1>Kompas dojrzałości zespołu</h1>
+  <h1>Poziomy zespołu</h1>
   <div class="meta">${team ? 'Zespół: ' + team + ' · ' : ''}Wynik zapisany: ${new Date().toLocaleDateString('pl-PL', {year:'numeric', month:'long', day:'numeric'})}</div>
   <div class="hint">Wskazówka: Ctrl+P (lub Cmd+P), żeby zapisać tę stronę jako PDF.</div>
   <div class="row">
@@ -1402,7 +1403,7 @@ document.getElementById('printBtn').addEventListener('click', () => {
   const a = document.createElement('a');
   a.href = url;
   const teamSlug = team ? '-' + team.toLowerCase().replace(/[^a-z0-9ąćęłńóśźż]+/gi, '-').replace(/^-+|-+$/g, '') : '';
-  a.download = `kompas-wynik${teamSlug}-${new Date().toISOString().slice(0,10)}.html`;
+  a.download = `poziomy-zespolow-wynik${teamSlug}-${new Date().toISOString().slice(0,10)}.html`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
