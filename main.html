@@ -539,11 +539,11 @@
 
   <div class="radars">
     <div class="radar-block">
-      <div class="rlabel"><span class="name org-label">Organizacja i planowanie</span><span><span class="avg" id="orgAvgLabel">–</span><span class="avg-range" id="orgRangeLabel"></span></span></div>
+      <div class="rlabel"><span class="name org-label">Organizacja i planowanie</span></div>
       <div id="orgRadar"></div>
     </div>
     <div class="radar-block">
-      <div class="rlabel"><span class="name tech-label">Technologia (DORA)</span><span><span class="avg" id="techAvgLabel">–</span><span class="avg-range" id="techRangeLabel"></span></span></div>
+      <div class="rlabel"><span class="name tech-label">Technologia (DORA)</span></div>
       <div id="techRadar"></div>
     </div>
   </div>
@@ -566,11 +566,11 @@
 
     <div class="radars" style="margin-top:8px;">
       <div class="radar-block">
-        <div class="rlabel"><span class="name org-label">Organizacja i planowanie</span><span><span class="avg" id="orgAvgLabelBottom">–</span><span class="avg-range" id="orgRangeLabelBottom"></span></span></div>
+        <div class="rlabel"><span class="name org-label">Organizacja i planowanie</span></div>
         <div id="orgRadarBottom"></div>
       </div>
       <div class="radar-block">
-        <div class="rlabel"><span class="name tech-label">Technologia (DORA)</span><span><span class="avg" id="techAvgLabelBottom">–</span><span class="avg-range" id="techRangeLabelBottom"></span></span></div>
+        <div class="rlabel"><span class="name tech-label">Technologia (DORA)</span></div>
         <div id="techRadarBottom"></div>
       </div>
     </div>
@@ -1276,14 +1276,6 @@ function update(){
   const techMax = techVals.length ? Math.max(...techVals) : null;
   const rangeText = (min, max) => (min === null) ? '' : (min === max ? `(wszystkie: ${min})` : `(zakres: ${min}–${max})`);
 
-  document.getElementById('orgAvgLabel').textContent = orgAvg === null ? '–' : orgAvg.toFixed(1);
-  document.getElementById('techAvgLabel').textContent = techAvg === null ? '–' : techAvg.toFixed(1);
-  document.getElementById('orgAvgLabelBottom').textContent = orgAvg === null ? '–' : orgAvg.toFixed(1);
-  document.getElementById('techAvgLabelBottom').textContent = techAvg === null ? '–' : techAvg.toFixed(1);
-  document.getElementById('orgRangeLabel').textContent = rangeText(orgMin, orgMax);
-  document.getElementById('techRangeLabel').textContent = rangeText(techMin, techMax);
-  document.getElementById('orgRangeLabelBottom').textContent = rangeText(orgMin, orgMax);
-  document.getElementById('techRangeLabelBottom').textContent = rangeText(techMin, techMax);
   document.getElementById('orgAvgOut').textContent = orgAvg === null ? 'brak ocenionych wymiarów' : `${orgAvg.toFixed(1)} / 5 ${rangeText(orgMin, orgMax)}`;
   document.getElementById('techAvgOut').textContent = techAvg === null ? 'brak ocenionych wymiarów' : `${techAvg.toFixed(1)} / 5 ${rangeText(techMin, techMax)}`;
 
