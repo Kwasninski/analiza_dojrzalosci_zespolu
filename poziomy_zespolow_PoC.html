@@ -305,7 +305,9 @@
     border-radius:6px;
     padding:18px 20px;
     margin-bottom:14px;
+    border-left:3px solid transparent;
   }
+  .card.unanswered{border-left-color:var(--org);}
   .card .title{
     font-weight:600;
     font-size:15.5px;
@@ -488,6 +490,9 @@
   th,td{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(255,255,255,0.12);}
   th{color:#9FAAB5;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
   .muted{color:#8B96A2;font-size:13px;}
+  .status-warning{color:var(--low);font-size:13px;font-weight:600;}
+  @keyframes flash-warning{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 2px var(--low);}}
+  .card.flash-warning{animation:flash-warning 0.5s ease-in-out 2;}
 
   footer{
     text-align:center;
@@ -615,17 +620,6 @@
     <summary>O metodologii — dlaczego samoocena, a nie twarde dane</summary>
     <p class="howto-note">Tam, gdzie realny pomiar istnieje (cztery metryki DORA: częstotliwość wdrożeń, lead time, wskaźnik nieudanych zmian, MTTR), każdy z tych wymiarów ma dodatkowe, opcjonalne pole na wpisanie faktycznej wartości z Waszego dashboardu, jeśli ją znacie — subiektywna ocena i twarda liczba mogą się różnić, i to też jest informacja. Warto wiedzieć, że sam doroczny <em>State of DevOps Report</em>, z którego pochodzą te cztery metryki i ich progi (Elite/High/Medium/Low), również opiera się na ankietach samoopisowych tysięcy inżynierów — samoopis jako metoda w tej dokładnie dziedzinie ma ugruntowaną pozycję, nie jest amatorskim skrótem. Tam, gdzie wymiar dotyczy kultury czy sposobu pracy (nie technologii), żaden inny pomiar nie istnieje — pytamy zespół, bo to jedyne źródło tej informacji.</p>
   </details>
-
-  <div class="radars">
-    <div class="radar-block">
-      <div class="rlabel"><span class="name org-label">Organizacja i planowanie</span></div>
-      <div id="orgRadar"></div>
-    </div>
-    <div class="radar-block">
-      <div class="rlabel"><span class="name tech-label">Technologia (DORA)</span></div>
-      <div id="techRadar"></div>
-    </div>
-  </div>
 
   <section class="group" id="orgSection">
     <div class="group-head"><span class="dot org"></span><span class="eyebrow">Organizacja i planowanie</span></div>
@@ -1218,7 +1212,7 @@ const RECOMMENDATIONS = {
 
 const state = {};
 const naSet = new Set();
-[...ORG_DIMS, ...TECH_DIMS].forEach(d => state[d.id] = 3);
+[...ORG_DIMS, ...TECH_DIMS].forEach(d => state[d.id] = null);
 
 const comments = {};
 
@@ -1229,13 +1223,13 @@ const naReasons = {};
 function renderCards(dims, containerId, colorClass){
   const el = document.getElementById(containerId);
   el.innerHTML = dims.map(d => `
-    <div class="card" id="card-${d.id}">
+    <div class="card unanswered" id="card-${d.id}">
       <div class="title-row">
         <div class="title">${d.title}</div>
         ${d.help ? `<span class="info-icon" tabindex="0">i<span class="tooltip">${d.help}</span></span>` : ''}
       </div>
       <div class="scale-radio-list" id="scalelist-${d.id}" role="radiogroup" aria-label="Wybierzcie opis, który najlepiej pasuje">
-        ${[1,2,3,4,5].map(n => `<label class="radio-option${n===3?' is-checked':''}" for="score-${d.id}-${n}"><input type="radio" name="score-${d.id}" id="score-${d.id}-${n}" value="${n}" data-id="${d.id}" ${n===3?'checked':''}><span class="opt-num">${n}</span><span class="opt-text">${d.levels[n-1]}</span></label>`).join('')}
+        ${[1,2,3,4,5].map(n => `<label class="radio-option" for="score-${d.id}-${n}"><input type="radio" name="score-${d.id}" id="score-${d.id}-${n}" value="${n}" data-id="${d.id}"><span class="opt-num">${n}</span><span class="opt-text">${d.levels[n-1]}</span></label>`).join('')}
       </div>
       ${REAL_DATA_DIMS.has(d.id) ? `<input type="text" class="real-data-input" id="realdata-${d.id}" placeholder="Opcjonalnie: realna wartość z dashboardu, jeśli ją znacie">` : ''}
       <label class="na-toggle">
@@ -1257,6 +1251,8 @@ function renderCards(dims, containerId, colorClass){
         state[d.id] = v;
         scaleList.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('is-checked'));
         e.target.closest('.radio-option').classList.add('is-checked');
+        document.getElementById(`card-${d.id}`).classList.remove('unanswered');
+        clearExportWarning();
         update();
       });
     });
@@ -1276,13 +1272,16 @@ function renderCards(dims, containerId, colorClass){
         naSet.add(d.id);
         radios.forEach(r => r.disabled = true);
         card.classList.add('is-na');
+        card.classList.remove('unanswered');
         naReasonInput.style.display = 'block';
         naReasonInput.focus();
+        clearExportWarning();
       } else {
         naSet.delete(d.id);
         radios.forEach(r => r.disabled = false);
         card.classList.remove('is-na');
         naReasonInput.style.display = 'none';
+        if(state[d.id] === null) card.classList.add('unanswered');
       }
       update();
     });
@@ -1371,8 +1370,10 @@ function renderRadar(dims, values, color, size=280){
 }
 
 function update(){
-  const orgActive = ORG_DIMS.filter(d => !naSet.has(d.id));
-  const techActive = TECH_DIMS.filter(d => !naSet.has(d.id));
+  const allDims = [...ORG_DIMS, ...TECH_DIMS];
+
+  const orgActive = ORG_DIMS.filter(d => !naSet.has(d.id) && state[d.id] !== null);
+  const techActive = TECH_DIMS.filter(d => !naSet.has(d.id) && state[d.id] !== null);
   const orgVals = orgActive.map(d => state[d.id]);
   const techVals = techActive.map(d => state[d.id]);
   const orgAvg = orgVals.length ? orgVals.reduce((a,b)=>a+b,0)/orgVals.length : null;
@@ -1388,8 +1389,6 @@ function update(){
 
   const orgRadarHTML = renderRadar(ORG_DIMS, state, '#B9812E');
   const techRadarHTML = renderRadar(TECH_DIMS, state, '#276765');
-  document.getElementById('orgRadar').innerHTML = orgRadarHTML;
-  document.getElementById('techRadar').innerHTML = techRadarHTML;
   document.getElementById('orgRadarBottom').innerHTML = orgRadarHTML;
   document.getElementById('techRadarBottom').innerHTML = techRadarHTML;
 
@@ -1397,7 +1396,8 @@ function update(){
   if(all.length === 0){
     document.getElementById('strongestOut').textContent = '–';
     document.getElementById('weakestOut').textContent = '–';
-    renderRecommendations([]);
+    const allMarkedNA = allDims.every(d => naSet.has(d.id));
+    renderRecommendations([], allMarkedNA);
     return;
   }
   let strongest = all[0], weakest = all[0];
@@ -1411,10 +1411,12 @@ function update(){
   renderRecommendations(all);
 }
 
-function renderRecommendations(all){
+function renderRecommendations(all, allMarkedNA){
   const el = document.getElementById('recoOut');
   if(all.length === 0){
-    el.innerHTML = '<div class="reco-empty">Wszystkie wymiary są oznaczone jako „nie dotyczy” — odznaczcie przynajmniej część z nich, żeby zobaczyć rekomendacje.</div>';
+    el.innerHTML = allMarkedNA
+      ? '<div class="reco-empty">Wszystkie wymiary są oznaczone jako „nie dotyczy” — odznaczcie przynajmniej część z nich, żeby zobaczyć rekomendacje.</div>'
+      : '<div class="reco-empty">Oceńcie przynajmniej jeden wymiar, żeby zobaczyć rekomendacje.</div>';
     return;
   }
   const sorted = [...all].sort((a,b) => state[a.id] - state[b.id]);
@@ -1493,6 +1495,22 @@ function flushPendingAction(){
 }
 
 document.getElementById('printBtn').addEventListener('click', () => {
+  const allDimsCheck = [...ORG_DIMS, ...TECH_DIMS];
+  const unanswered = allDimsCheck.filter(d => !naSet.has(d.id) && state[d.id] === null);
+  const statusEl = document.getElementById('saveStatus');
+  if(unanswered.length > 0){
+    statusEl.className = 'status-warning';
+    statusEl.textContent = unanswered.length === 1
+      ? 'Zostało 1 nieocenione pytanie — oceńcie je albo zaznaczcie „nie dotyczy”, zanim zapiszecie wynik.'
+      : `Zostało ${unanswered.length} nieocenionych pytań — oceńcie je albo zaznaczcie „nie dotyczy”, zanim zapiszecie wynik.`;
+    const firstCard = document.getElementById(`card-${unanswered[0].id}`);
+    firstCard.scrollIntoView({behavior:'smooth', block:'center'});
+    firstCard.classList.add('flash-warning');
+    setTimeout(() => firstCard.classList.remove('flash-warning'), 1100);
+    return;
+  }
+  statusEl.className = 'muted';
+
   flushPendingAction();
   const team = currentTeamName();
   const orgAvg = document.getElementById('orgAvgOut').textContent;
@@ -1501,8 +1519,8 @@ document.getElementById('printBtn').addEventListener('click', () => {
   const weakest = document.getElementById('weakestOut').textContent;
   const notesVal = document.getElementById('notes').value;
   const closingQuestionVal = document.getElementById('closingQuestion').value;
-  const orgRadarSVG = document.getElementById('orgRadar').innerHTML;
-  const techRadarSVG = document.getElementById('techRadar').innerHTML;
+  const orgRadarSVG = document.getElementById('orgRadarBottom').innerHTML;
+  const techRadarSVG = document.getElementById('techRadarBottom').innerHTML;
   const recoHTML = document.getElementById('recoOut').innerHTML;
   const actionsHTML = actionItems.length
     ? actionItems.map(a => {
@@ -1592,6 +1610,14 @@ document.getElementById('printBtn').addEventListener('click', () => {
 
 function currentTeamName(){
   return document.getElementById('teamName').value.trim();
+}
+
+function clearExportWarning(){
+  const statusEl = document.getElementById('saveStatus');
+  if(statusEl.classList.contains('status-warning')){
+    statusEl.className = 'muted';
+    statusEl.textContent = '';
+  }
 }
 
 /* Zapis wyniku i historia ocen wymagają trwałego magazynu (window.storage), dostępnego tylko gdy
